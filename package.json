@@ -1,7 +1,14 @@
 {
    "name": "jaebook-server",
    "version": "0.0.1",
-   "description": "Awesome project developed with TypeORM.",
+   "license": "MIT",
+   "description": "JaeBook API Server",
+   "scripts": {
+      "build": "tsc",
+      "start": "node build/index.js",
+      "dev": "nodemon --exec ts-node src/index.ts --watch",
+      "lint": "eslint --ext .ts,.js . --ignore-path .gitignore ."
+   },
    "devDependencies": {
       "@types/bcryptjs": "^2.4.2",
       "@types/body-parser": "^1.17.1",
@@ -14,9 +21,9 @@
       "eslint": "^6.8.0",
       "eslint-config-prettier": "^6.9.0",
       "eslint-plugin-prettier": "^3.1.2",
+      "nodemon": "^2.0.2",
       "prettier": "^1.19.1",
       "ts-node": "3.3.0",
-      "ts-node-dev": "^1.0.0-pre.44",
       "typescript": "3.3.3333"
    },
    "dependencies": {
@@ -31,9 +38,5 @@
       "reflect-metadata": "^0.1.10",
       "typedi": "^0.8.0",
       "typeorm": "0.2.22"
-   },
-   "scripts": {
-      "start": "ts-node src/index.ts",
-      "lint": "eslint --ext .ts,.js . --ignore-path .gitignore ."
    }
 }
