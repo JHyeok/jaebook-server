@@ -6,22 +6,22 @@ import * as helmet from "helmet";
 import * as cors from "cors";
 import routes from "./routes";
 
-createConnection().then(async connection => {
+createConnection()
+    .then(async connection => {
+        // create express app
+        const app = express();
 
-    // create express app
-    const app = express();
+        // use midlewares
+        app.use(helmet());
+        app.use(cors());
+        app.use(bodyParser.json());
 
-    // use midlewares
-    app.use(helmet());
-    app.use(cors());
-    app.use(bodyParser.json());
+        // set routes
+        app.use("/", routes);
 
-    // set routes
-    app.use("/", routes);
+        // start express server
+        app.listen(3000);
 
-    // start express server
-    app.listen(3000);
-
-    console.log("Express server has started on port 3000.");
-
-}).catch(error => console.log(error));
+        console.log("Express server has started on port 3000.");
+    })
+    .catch(error => console.log(error));
