@@ -1,6 +1,6 @@
 import { Service } from "typedi";
-import { NextFunction, Request, Response } from "express";
-import UserService from "../service/user.service";
+import { Request, Response } from "express";
+import UserService from "../services/user.service";
 
 @Service()
 class UserController {

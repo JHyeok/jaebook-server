@@ -1,6 +1,6 @@
 import { Router } from "express";
 import Container from "typedi";
-import { UserController } from "../controller";
+import { UserController } from "../controllers";
 
 const router = Router();
 const controller = Container.get(UserController);
