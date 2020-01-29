@@ -4,3 +4,9 @@ node_modules/
 build/
 tmp/
 temp/
+
+# dotenv file
+.env
+.env.development
+.env.production
+.env.test
