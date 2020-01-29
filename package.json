@@ -5,9 +5,10 @@
    "description": "JaeBook API Server",
    "scripts": {
       "build": "tsc",
-      "start": "node build/index.js",
-      "dev": "nodemon --exec ts-node src/index.ts --watch",
-      "lint": "eslint --ext .ts,.js . --ignore-path .gitignore ."
+      "start": "cross-env NODE_ENV=production node build/server.js",
+      "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts --watch",
+      "lint": "eslint --ext .ts,.js . --ignore-path .gitignore .",
+      "prod": "yarn build && yarn start"
    },
    "devDependencies": {
       "@types/bcryptjs": "^2.4.2",
