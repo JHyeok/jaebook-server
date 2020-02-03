@@ -1,37 +1,34 @@
 import { Service } from "typedi";
 import { getRepository } from "typeorm";
-import User from "../entities/User";
+import { User } from "../entities/User";
 
 @Service()
-class UserService {
-    public getUsers = async () => {
+export class UserService {
+    public async getUsers() {
         const userRepository = getRepository(User);
-
         return userRepository.find();
-    };
+    }
 
-    public getUserById = async (userId: string) => {
+    public async getUserById(userId: string) {
         const userRepository = getRepository(User);
 
         return userRepository.findOne({
             where: { id: Number(userId) },
         });
-    };
+    }
 
-    public createUser = async (user: User) => {
+    public async createUser(user: User) {
         const userRepository = getRepository(User);
 
         return userRepository.save(user);
-    };
+    }
 
-    public deleteUser = async (userId: string) => {
+    public async deleteUser(userId: string) {
         const userRepository = getRepository(User);
         const userToRemove = await userRepository.findOne({
             where: { id: Number(userId) },
         });
 
         return await userRepository.remove(userToRemove);
-    };
+    }
 }
-
-export default UserService;

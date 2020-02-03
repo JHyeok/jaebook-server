@@ -1,23 +1,25 @@
 import "reflect-metadata";
-import { createConnection, Connection, ConnectionOptions } from "typeorm";
+import Container from "typedi";
+import { createConnection, ConnectionOptions, useContainer } from "typeorm";
+import { env } from "./env";
 
-const isDevelopment: boolean = process.env.NODE_ENV === "development";
+export async function createDatabaseConnection() {
+    try {
+        const connectionOpts: ConnectionOptions = {
+            type: "mysql",
+            host: env.database.host,
+            port: env.database.port,
+            username: env.database.usename,
+            password: env.database.password,
+            database: env.database.name,
+            synchronize: env.database.synchronize,
+            logging: env.database.logging,
+            entities: [__dirname + "/entities/*{.ts,.js}"],
+        };
 
-const ENV_PATH: string = `config/.env.${process.env.NODE_ENV || "development"}`;
-require("dotenv").config({ path: ENV_PATH });
-
-const connectionOpts: ConnectionOptions = {
-    type: "mysql",
-    host: process.env.DATABASE_HOST,
-    port: Number(process.env.DATABASE_PORT),
-    username: process.env.DATABASE_USERNAME,
-    password: process.env.DATABASE_PASSWORD,
-    database: process.env.DATABASE_NAME,
-    synchronize: isDevelopment,
-    logging: isDevelopment,
-    entities: [__dirname + "/entities/*{.ts,.js}"],
-};
-
-const connection: Promise<Connection> = createConnection(connectionOpts);
-
-export default connection;
+        useContainer(Container);
+        await createConnection(connectionOpts);
+    } catch (error) {
+        throw error;
+    }
+}

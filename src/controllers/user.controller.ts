@@ -1,9 +1,9 @@
 import { Service } from "typedi";
 import { Request, Response } from "express";
-import UserService from "../services/user.service";
+import { UserService } from "../services/user.service";
 
 @Service()
-class UserController {
+export class UserController {
     constructor(private userService: UserService) {}
 
     public getUsers = async (req: Request, res: Response) => {
@@ -26,5 +26,3 @@ class UserController {
         res.send(user);
     };
 }
-
-export default UserController;
