@@ -3,20 +3,27 @@ import * as bodyParser from "body-parser";
 import * as helmet from "helmet";
 import * as cors from "cors";
 import routes from "./routes";
+import { createDatabaseConnection } from "./database";
 
 interface Err extends Error {
     status: number;
     data?: any;
 }
 
-class App {
+export class App {
     public app: express.Application;
 
     constructor() {
         this.app = express();
+
+        this.setDatabase();
         this.setRoutes();
         this.setMiddlewares();
         this.setErrorHandler();
+    }
+
+    private async setDatabase() {
+        await createDatabaseConnection();
     }
 
     private setRoutes(): void {
@@ -46,6 +53,10 @@ class App {
             });
         });
     }
-}
 
-export default App;
+    public async runExpressServer(port: number) {
+        this.app.listen(port, () => {
+            console.log(`Server is running on http://localhost:${port}`);
+        });
+    }
+}

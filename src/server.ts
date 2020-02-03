@@ -1,17 +1,11 @@
-import App from "./app";
-import * as express from "express";
-import databaseConnection from "./database";
+import { App } from "./app";
+import { env } from "./env";
 
-const ENV_PATH: string = `config/.env.${process.env.NODE_ENV || "development"}`;
-require("dotenv").config({ path: ENV_PATH });
+const PORT: number = env.app.port;
 
-const PORT: number = Number(process.env.PORT) || 3000;
-const app: express.Application = new App().app;
-
-databaseConnection
-    .then(() =>
-        app.listen(PORT, () => {
-            console.log(`Express server has started on port ${PORT}`);
-        }),
-    )
-    .catch(console.error);
+try {
+    const app = new App();
+    app.runExpressServer(PORT);
+} catch (error) {
+    console.log(error);
+}
