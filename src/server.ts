@@ -1,11 +1,8 @@
 import { App } from "./app";
-import { env } from "./env";
-
-const PORT: number = env.app.port;
 
 try {
     const app = new App();
-    app.runExpressServer(PORT);
+    app.runExpressServer();
 } catch (error) {
     console.log(error);
 }
