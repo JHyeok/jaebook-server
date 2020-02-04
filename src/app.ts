@@ -2,8 +2,9 @@ import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as helmet from "helmet";
 import * as cors from "cors";
-import routes from "./routes";
+import apiRouter from "./routes/Api";
 import { createDatabaseConnection } from "./database";
+import { env } from "./env";
 
 interface Err extends Error {
     status: number;
@@ -17,8 +18,8 @@ export class App {
         this.app = express();
 
         this.setDatabase();
-        this.setRoutes();
         this.setMiddlewares();
+        this.setRoutes();
         this.setErrorHandler();
     }
 
@@ -27,7 +28,7 @@ export class App {
     }
 
     private setRoutes(): void {
-        this.app.use("/api", routes);
+        this.app.use(`/${env.app.apiPrefix}`, apiRouter);
     }
 
     private setMiddlewares(): void {
@@ -54,7 +55,9 @@ export class App {
         });
     }
 
-    public async runExpressServer(port: number) {
+    public async runExpressServer() {
+        const port: number = env.app.port;
+
         this.app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);
         });
