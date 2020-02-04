@@ -12,6 +12,7 @@ export const env = {
     isTest: process.env.NODE_ENV === "test",
     app: {
         port: Number(process.env.PORT) || 3000,
+        apiPrefix: process.env.API_PREFIX || "api",
     },
     database: {
         host: process.env.DATABASE_HOST,
