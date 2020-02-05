@@ -1,28 +1,13 @@
-import { Service } from "typedi";
-import { Request, Response } from "express";
 import { UserService } from "../services/UserService";
+import { JsonController, Get } from "routing-controllers";
+import { User } from "../entities/User";
 
-@Service()
+@JsonController("/users")
 export class UserController {
     constructor(private userService: UserService) {}
 
-    public getUsers = async (req: Request, res: Response) => {
-        const users = await this.userService.getUsers();
-        res.send(users);
-    };
-
-    public getUserById = async (req: Request, res: Response) => {
-        const user = await this.userService.getUserById(req.params.userId);
-        res.send(user);
-    };
-
-    public createUser = async (req: Request, res: Response) => {
-        const user = await this.userService.createUser(req.body);
-        res.send(user);
-    };
-
-    public deleteUser = async (req: Request, res: Response) => {
-        const user = await this.userService.deleteUser(req.params.userId);
-        res.send(user);
-    };
+    @Get()
+    public find(): Promise<User[]> {
+        return this.userService.getUsers();
+    }
 }

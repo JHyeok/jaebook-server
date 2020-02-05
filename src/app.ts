@@ -1,10 +1,13 @@
+import "reflect-metadata";
 import * as express from "express";
 import * as bodyParser from "body-parser";
 import * as helmet from "helmet";
 import * as cors from "cors";
-import apiRouter from "./routes/Api";
 import { createDatabaseConnection } from "./database";
 import { env } from "./env";
+import { createExpressServer, useContainer as routingUseContainer } from "routing-controllers";
+import { UserController } from "./controllers/UserController";
+import { Container } from "typedi";
 
 interface Err extends Error {
     status: number;
@@ -19,16 +22,11 @@ export class App {
 
         this.setDatabase();
         this.setMiddlewares();
-        this.setRoutes();
         this.setErrorHandler();
     }
 
     private async setDatabase() {
         await createDatabaseConnection();
-    }
-
-    private setRoutes(): void {
-        this.app.use(`/${env.app.apiPrefix}`, apiRouter);
     }
 
     private setMiddlewares(): void {
@@ -55,8 +53,15 @@ export class App {
         });
     }
 
-    public async runExpressServer() {
+    public async createExpressServer() {
         const port: number = env.app.port;
+
+        routingUseContainer(Container);
+
+        this.app = createExpressServer({
+            routePrefix: env.app.apiPrefix,
+            controllers: [UserController],
+        });
 
         this.app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);

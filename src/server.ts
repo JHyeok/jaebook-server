@@ -2,7 +2,7 @@ import { App } from "./app";
 
 try {
     const app = new App();
-    app.runExpressServer();
+    app.createExpressServer();
 } catch (error) {
     console.log(error);
 }
