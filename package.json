@@ -11,6 +11,7 @@
       "prod": "yarn build && yarn start"
    },
    "devDependencies": {
+      "@types/bcrypt": "^3.0.0",
       "@types/bcryptjs": "^2.4.2",
       "@types/body-parser": "^1.17.1",
       "@types/cors": "^2.8.6",
@@ -28,6 +29,7 @@
       "typescript": "^3.7.4"
    },
    "dependencies": {
+      "bcrypt": "^3.0.8",
       "bcryptjs": "^2.4.3",
       "body-parser": "^1.18.1",
       "class-transformer": "^0.2.3",
@@ -38,7 +40,7 @@
       "express": "^4.15.4",
       "helmet": "^3.21.2",
       "jsonwebtoken": "^8.5.1",
-      "mysql": "^2.14.1",
+      "mysql2": "^2.1.0",
       "reflect-metadata": "^0.1.13",
       "routing-controllers": "^0.8.0",
       "typedi": "^0.8.0",
