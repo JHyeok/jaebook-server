@@ -1,16 +1,37 @@
-import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { IsNotEmpty } from "class-validator";
+import * as bcrypt from "bcrypt";
 
 @Entity()
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryGeneratedColumn("uuid")
+    public id: string;
+
+    @Column({ name: "real_name" })
+    @IsNotEmpty()
+    public realName: string;
 
     @Column()
-    firstName: string;
+    @IsNotEmpty()
+    public email: string;
 
     @Column()
-    lastName: string;
+    @IsNotEmpty()
+    public password: string;
 
-    @Column()
-    age: number;
+    @Column({ name: "create_at" })
+    @CreateDateColumn()
+    createdAt: Date;
+
+    @Column({ name: "update_at" })
+    @UpdateDateColumn()
+    updatedAt: Date;
+
+    public hashPassword() {
+        this.password = bcrypt.hashSync(this.password, 10);
+    }
+
+    public comparePassword(unencryptedPassword: string) {
+        return bcrypt.compareSync(unencryptedPassword, this.password);
+    }
 }
