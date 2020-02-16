@@ -7,6 +7,7 @@ import { createDatabaseConnection } from "./database";
 import { env } from "./env";
 import { createExpressServer, useContainer as routingUseContainer } from "routing-controllers";
 import { UserController } from "./controllers/UserController";
+import { AuthController } from "./controllers/AuthController";
 import { Container } from "typedi";
 
 interface Err extends Error {
@@ -60,7 +61,7 @@ export class App {
 
         this.app = createExpressServer({
             routePrefix: env.app.apiPrefix,
-            controllers: [UserController],
+            controllers: [UserController, AuthController],
         });
 
         this.app.listen(port, () => {

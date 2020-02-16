@@ -31,7 +31,7 @@ export class User {
         this.password = bcrypt.hashSync(this.password, 10);
     }
 
-    public comparePassword(unencryptedPassword: string) {
-        return bcrypt.compareSync(unencryptedPassword, this.password);
+    public static comparePassword(user: User, unencryptedPassword: string) {
+        return bcrypt.compareSync(unencryptedPassword, user.password);
     }
 }
