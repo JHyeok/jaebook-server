@@ -2,6 +2,7 @@ import { AuthService } from "../services/AuthService";
 import { JsonController, Post, BodyParam, NotFoundError } from "routing-controllers";
 import * as jwt from "jsonwebtoken";
 import { env } from "../env";
+import { User } from "../entities/User";
 
 @JsonController("/auth")
 export class AuthController {
@@ -14,7 +15,15 @@ export class AuthController {
             throw new NotFoundError(`User was not found.`);
         }
 
-        const token = jwt.sign({ userId: user.id, userEmail: user.email }, env.app.jwtSecret, { expiresIn: "1h" });
+        const token = this.generateToken(user);
         return token;
+    }
+
+    /**
+     * JWT Token을 만든다.
+     * @param user
+     */
+    private generateToken(user: User) {
+        return jwt.sign({ userId: user.id, userEmail: user.email }, env.app.jwtSecret, { expiresIn: "1h" });
     }
 }
