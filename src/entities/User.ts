@@ -1,7 +1,6 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, IsNull } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import * as bcrypt from "bcrypt";
-import { isNull } from "util";
 
 @Entity()
 export class User {
