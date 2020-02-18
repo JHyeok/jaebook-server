@@ -44,7 +44,7 @@ export class AuthController {
      */
     private generateAccessToken(user: User) {
         return jwt.sign({ userId: user.id, userName: user.realName, userEmail: user.email }, env.app.jwtAccessSecret, {
-            expiresIn: "1h",
+            expiresIn: "30m",
         });
     }
 
