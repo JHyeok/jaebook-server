@@ -17,8 +17,14 @@ export class AuthController {
             throw new NotFoundError(`User was not found.`);
         }
 
-        const token = this.generateToken(user);
-        return token;
+        const accessToken = this.generateAccessToken(user);
+        const refreshToken = this.generateRefreshToken(user);
+        await this.authService.saveRefreshToken(user, refreshToken);
+
+        return {
+            token: accessToken,
+            refreshToken: refreshToken,
+        };
     }
 
     /**
@@ -33,10 +39,20 @@ export class AuthController {
     }
 
     /**
-     * JWT Token을 만든다.
+     * JWT Access Token을 만든다.
      * @param user
      */
-    private generateToken(user: User) {
-        return jwt.sign({ userId: user.id, userEmail: user.email }, env.app.jwtSecret, { expiresIn: "1h" });
+    private generateAccessToken(user: User) {
+        return jwt.sign({ userId: user.id, userName: user.realName, userEmail: user.email }, env.app.jwtAccessSecret, {
+            expiresIn: "1h",
+        });
+    }
+
+    /**
+     * JWT Refresh Token을 만든다.
+     * @param user
+     */
+    private generateRefreshToken(user: User) {
+        return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, { expiresIn: "14d" });
     }
 }
