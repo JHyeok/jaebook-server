@@ -13,7 +13,8 @@ export const env = {
     app: {
         port: Number(process.env.PORT) || 3000,
         apiPrefix: process.env.API_PREFIX || "api",
-        jwtSecret: process.env.JWT_SECRET,
+        jwtAccessSecret: process.env.JWT_SECRET_ACCESS_KEY,
+        jwtRefreshSecret: process.env.JWT_SECRET_REFRESH_KEY,
     },
     database: {
         host: process.env.DATABASE_HOST,
