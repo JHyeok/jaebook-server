@@ -22,16 +22,16 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     const token = extractTokenFromHeader(req);
     let jwtPayload;
 
-    // AccessToken의 유효기간을 체크하고 만료되었음을 알린다
-    const tokenExpiresDate = jwt.decode(token)["exp"];
-    const nowDate = Math.floor(Date.now() / 1000);
-    if (tokenExpiresDate < nowDate) {
-        res.status(401).send({ response: "Your token has expired!" });
-        return;
-    }
-
     // AccessToken 유효성 검사
     try {
+        // AccessToken의 유효기간을 체크하고 만료되었음을 알린다
+        const tokenExpiresDate = jwt.decode(token)["exp"];
+        const nowDate = Math.floor(Date.now() / 1000);
+        if (tokenExpiresDate < nowDate) {
+            res.status(401).send({ response: "Your token has expired!" });
+            return;
+        }
+
         jwtPayload = jwt.verify(token, env.app.jwtAccessSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {

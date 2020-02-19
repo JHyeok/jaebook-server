@@ -22,7 +22,8 @@ export class AuthController {
         await this.authService.saveRefreshToken(user, refreshToken);
 
         return {
-            token: accessToken,
+            realName: user.realName,
+            accessToken: accessToken,
             refreshToken: refreshToken,
         };
     }
