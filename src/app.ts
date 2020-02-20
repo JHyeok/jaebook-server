@@ -9,20 +9,13 @@ import { UserController } from "./controllers/UserController";
 import { AuthController } from "./controllers/AuthController";
 import { SecurityMiddleware } from "./middlewares/SecurityMiddleware";
 
-interface Err extends Error {
-    status: number;
-    data?: any;
-}
-
 export class App {
     public app: express.Application;
 
     constructor() {
         this.app = express();
-
         this.setDatabase();
         this.setMiddlewares();
-        this.setErrorHandler();
     }
 
     private async setDatabase() {
@@ -32,23 +25,6 @@ export class App {
     private setMiddlewares(): void {
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
-    }
-
-    private setErrorHandler(): void {
-        this.app.use((req: express.Request, res: express.Response, next: express.NextFunction) => {
-            const err = new Error("Not Found") as Err;
-            err.status = 404;
-            next(err);
-        });
-
-        // error handler
-        this.app.use((err: Err, req: express.Request, res: express.Response, next: express.NextFunction) => {
-            res.status(err.status || 500);
-            res.json({
-                message: err.message,
-                data: err.data,
-            });
-        });
     }
 
     public async createExpressServer() {
