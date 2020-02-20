@@ -1,14 +1,13 @@
 import "reflect-metadata";
 import * as express from "express";
 import * as bodyParser from "body-parser";
-import * as helmet from "helmet";
-import * as cors from "cors";
 import { createDatabaseConnection } from "./database";
 import { env } from "./env";
+import { Container } from "typedi";
 import { createExpressServer, useContainer as routingUseContainer } from "routing-controllers";
 import { UserController } from "./controllers/UserController";
 import { AuthController } from "./controllers/AuthController";
-import { Container } from "typedi";
+import { SecurityMiddleware } from "./middlewares/SecurityMiddleware";
 
 interface Err extends Error {
     status: number;
@@ -31,7 +30,6 @@ export class App {
     }
 
     private setMiddlewares(): void {
-        this.app.use(helmet());
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
     }
@@ -62,6 +60,7 @@ export class App {
             cors: true,
             routePrefix: env.app.apiPrefix,
             controllers: [UserController, AuthController],
+            middlewares: [SecurityMiddleware],
         });
 
         this.app.listen(port, () => {
