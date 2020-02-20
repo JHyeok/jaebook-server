@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import * as jwt from "jsonwebtoken";
 import { env } from "../env";
+import { User } from "../entities/User";
 
 /**
  * 헤더에서 토큰을 추출한다.
@@ -13,12 +14,12 @@ const extractTokenFromHeader = (req: Request) => {
 };
 
 /**
- * JWT Token을 체크한다.
+ * JWT AccessToken을 체크한다.
  * @param req
  * @param res
  * @param next
  */
-export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
+export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
     const token = extractTokenFromHeader(req);
     let jwtPayload;
 
@@ -41,4 +42,22 @@ export const checkJwt = (req: Request, res: Response, next: NextFunction) => {
     }
 
     next();
+};
+
+/**
+ * JWT AccessToken을 만든다.
+ * @param user
+ */
+export const generateAccessToken = (user: User) => {
+    return jwt.sign({ userId: user.id, userName: user.realName, userEmail: user.email }, env.app.jwtAccessSecret, {
+        expiresIn: "30m",
+    });
+};
+
+/**
+ * JWT RefreshToken을 만든다.
+ * @param user
+ */
+export const generateRefreshToken = (user: User) => {
+    return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, { expiresIn: "14d" });
 };
