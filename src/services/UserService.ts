@@ -14,11 +14,16 @@ export class UserService {
     }
 
     public getAllUsers(): Promise<User[]> {
-        return this.userRepository.find();
+        return this.userRepository.find({
+            select: ["id", "email", "realName", "createdAt"],
+        });
     }
 
     public getUsersById(id: string): Promise<User> {
-        return this.userRepository.findOne(id);
+        return this.userRepository.findOne({
+            select: ["id", "email", "realName", "createdAt"],
+            where: { id: id },
+        });
     }
 
     public updateUser(id: string, user: User): Promise<User> {
@@ -31,5 +36,19 @@ export class UserService {
         const userToRemove = await this.userRepository.findOne(id);
         this.userRepository.remove(userToRemove);
         return `remove user: ${id}`;
+    }
+
+    /**
+     * 동일한 이메일의 사용자가 있는지 검사
+     * @param email 이메일
+     */
+    public async isDuplicateUser(email: string): Promise<boolean> {
+        const user = await this.userRepository.findOne({ where: { email: email } });
+
+        if (user) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
