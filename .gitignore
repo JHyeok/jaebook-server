@@ -5,8 +5,11 @@ build/
 tmp/
 temp/
 
-# dotenv file
+# Ignore dotenv file
 .env
 .env.development
 .env.production
 .env.test
+
+# Ignore test-related files
+/coverage/
