@@ -1,4 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import * as bcrypt from "bcrypt";
 
@@ -28,11 +28,12 @@ export class User {
     @UpdateDateColumn({ name: "updated_at" })
     public updatedAt: Date;
 
-    public hashPassword() {
-        this.password = bcrypt.hashSync(this.password, 10);
+    @BeforeInsert()
+    public async hashPassword() {
+        this.password = await bcrypt.hash(this.password, 10);
     }
 
-    public static comparePassword(user: User, unencryptedPassword: string) {
-        return bcrypt.compareSync(unencryptedPassword, user.password);
+    public async comparePassword(unencryptedPassword: string): Promise<boolean> {
+        return await bcrypt.compare(unencryptedPassword, this.password);
     }
 }

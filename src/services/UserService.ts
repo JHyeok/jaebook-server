@@ -8,7 +8,6 @@ export class UserService {
     constructor(@InjectRepository() private userRepository: UserRepository) {}
 
     public createUser(user: User): Promise<User> {
-        user.hashPassword();
         const newUser = this.userRepository.save(user);
         return newUser;
     }
@@ -27,7 +26,6 @@ export class UserService {
     }
 
     public updateUser(id: string, user: User): Promise<User> {
-        user.hashPassword();
         user.id = id;
         return this.userRepository.save(user);
     }

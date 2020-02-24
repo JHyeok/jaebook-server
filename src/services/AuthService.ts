@@ -14,7 +14,9 @@ export class AuthService {
             },
         });
 
-        if (User.comparePassword(user, password)) {
+        const isPasswordMatch = await user.comparePassword(password);
+
+        if (isPasswordMatch) {
             return user;
         }
 
