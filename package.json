@@ -8,7 +8,8 @@
       "start": "cross-env NODE_ENV=production node build/server.js",
       "dev": "cross-env NODE_ENV=development nodemon",
       "lint": "eslint --ext .ts,.js . --ignore-path .gitignore .",
-      "prod": "yarn build && yarn start"
+      "prod": "yarn build && yarn start",
+      "test": "jest --coverage --verbose"
    },
    "devDependencies": {
       "@types/bcrypt": "^3.0.0",
@@ -52,5 +53,20 @@
       "typedi": "^0.8.0",
       "typeorm": "^0.2.22",
       "typeorm-typedi-extensions": "^0.2.3"
+   },
+   "jest": {
+      "transform": {
+         "^.+\\.ts$": "ts-jest"
+      },
+      "testRegex": "\\.test\\.ts$",
+      "moduleFileExtensions": [
+         "ts",
+         "js"
+      ],
+      "globals": {
+         "ts-jest": {
+            "enableTsDiagnostics": true
+         }
+      }
    }
 }
