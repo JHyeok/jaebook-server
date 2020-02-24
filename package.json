@@ -6,7 +6,7 @@
    "scripts": {
       "build": "tsc",
       "start": "cross-env NODE_ENV=production node build/server.js",
-      "dev": "cross-env NODE_ENV=development nodemon --exec ts-node src/server.ts --watch",
+      "dev": "cross-env NODE_ENV=development nodemon",
       "lint": "eslint --ext .ts,.js . --ignore-path .gitignore .",
       "prod": "yarn build && yarn start"
    },
