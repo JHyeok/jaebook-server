@@ -14,10 +14,12 @@ export class AuthService {
             },
         });
 
-        const isPasswordMatch = await user.comparePassword(password);
+        if (user) {
+            const isPasswordMatch = await user.comparePassword(password);
 
-        if (isPasswordMatch) {
-            return user;
+            if (isPasswordMatch) {
+                return user;
+            }
         }
 
         return undefined;
