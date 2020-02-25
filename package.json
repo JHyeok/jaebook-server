@@ -65,7 +65,8 @@
       ],
       "globals": {
          "ts-jest": {
-            "enableTsDiagnostics": true
+            "tsConfig": "./tsconfig.json",
+            "diagnostics": true
          }
       }
    }
