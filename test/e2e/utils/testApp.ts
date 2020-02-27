@@ -19,7 +19,6 @@ function setExpress() {
     app.use(bodyParser.urlencoded({ extended: false }));
 
     useExpressServer(app, {
-        cors: true,
         routePrefix: "/api",
         controllers: [UserController],
     });
