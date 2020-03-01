@@ -1,6 +1,6 @@
 ## ❯ JaeBook Server
 
-간단한 SNS 토이 프로젝트입니다.
+TypeScript와 Express를 사용해서 만든 서버
 
 ### TechStack
 
@@ -11,9 +11,26 @@
 - **TypeDI** JavaScript 및 TypeScript를 위한 의존성 주입
 - **Routing-Controllers** 구조적이고 선언적이며 아름답게 구성된 클래스 기반 컨트롤러
 - **JWT** AccessToken, RefreshToken을 이용
-- **Config env** config 폴더의 `.env`을 이용한 환경 변수 관리
 - **ESLint, Prettier** 코드 스타일 일관성 유지
+- **Jest** 테스트 코드 작성
 
+### Environment Variable Management
+
+`jaebook-server/config/`에서 `.sample`확장자 지우고 사용
+
+```env
+PORT=3000
+API_PREFIX=api
+DATABASE_HOST=127.0.0.1
+DATABASE_PORT=3306
+DATABASE_USERNAME=development
+DATABASE_PASSWORD=development
+DATABASE_NAME=development
+TYPEORM_SYNCHRONIZE=true
+TYPEORM_LOGGING=true
+JWT_SECRET_ACCESS_KEY=test!@#$
+JWT_SECRET_REFRESH_KEY=retest!@#$
+```
 
 ### Build Setup
 
