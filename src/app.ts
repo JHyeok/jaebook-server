@@ -5,9 +5,6 @@ import { createDatabaseConnection } from "./database";
 import { env } from "./env";
 import { Container } from "typedi";
 import { createExpressServer, useContainer as routingUseContainer } from "routing-controllers";
-import { UserController } from "./controllers/UserController";
-import { AuthController } from "./controllers/AuthController";
-import { SecurityMiddleware } from "./middlewares/SecurityMiddleware";
 
 export class App {
     public app: express.Application;
@@ -35,8 +32,8 @@ export class App {
         this.app = createExpressServer({
             cors: true,
             routePrefix: env.app.apiPrefix,
-            controllers: [UserController, AuthController],
-            middlewares: [SecurityMiddleware],
+            controllers: [`${__dirname}/controllers/*.[jt]s`],
+            middlewares: [`${__dirname}/middlewares/*.[jt]s`],
         });
 
         this.app.listen(port, () => {

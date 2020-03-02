@@ -27,6 +27,6 @@ export class AuthService {
 
     public async saveRefreshToken(user: User, token: string): Promise<void> {
         user.refreshToekn = token;
-        this.userRepository.save(user);
+        await this.userRepository.save(user);
     }
 }
