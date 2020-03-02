@@ -13,7 +13,7 @@ describe("UserController", () => {
     let userController: UserController;
 
     beforeAll(async () => {
-        db = await createMemoryDatabase([User]);
+        db = await createMemoryDatabase();
         userRepository = db.getRepository(User);
         userService = new UserService(userRepository);
         userController = new UserController(userService);

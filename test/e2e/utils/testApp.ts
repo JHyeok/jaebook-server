@@ -4,14 +4,12 @@ import bodyParser from "body-parser";
 import { Container } from "typedi";
 import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
 import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
-import { User } from "../../../src/entities/User";
-import { UserController } from "../../../src/controllers/UserController";
 
 routingUseContainer(Container);
 const app = express();
 
 async function setDatabase() {
-    await createMemoryDatabase([User]);
+    await createMemoryDatabase();
 }
 
 function setExpress() {
@@ -20,7 +18,7 @@ function setExpress() {
 
     useExpressServer(app, {
         routePrefix: "/api",
-        controllers: [UserController],
+        controllers: [__dirname + "/../../../src/controllers/*{.ts,.js}"],
     });
 }
 

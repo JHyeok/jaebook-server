@@ -11,8 +11,8 @@ describe("AuthService", () => {
     let authService: AuthService;
 
     beforeAll(async () => {
-        db = await createMemoryDatabase([User]);
-        userRepository = db.getRepository(User);
+        db = await createMemoryDatabase();
+        userRepository = db.getCustomRepository(UserRepository);
         authService = new AuthService(userRepository);
         await userRepository.save(UserSeed);
     });

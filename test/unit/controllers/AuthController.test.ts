@@ -15,7 +15,7 @@ describe("AuthController", () => {
     let authController: AuthController;
 
     beforeAll(async () => {
-        db = await createMemoryDatabase([User]);
+        db = await createMemoryDatabase();
         userRepository = db.getRepository(User);
         userService = new UserService(userRepository);
         authService = new AuthService(userRepository);

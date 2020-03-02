@@ -10,8 +10,8 @@ describe("UserService", () => {
     let userService: UserService;
 
     beforeAll(async () => {
-        db = await createMemoryDatabase([User]);
-        userRepository = db.getRepository(User);
+        db = await createMemoryDatabase();
+        userRepository = db.getCustomRepository(UserRepository);
         userService = new UserService(userRepository);
     });
 
