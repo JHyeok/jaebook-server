@@ -1,6 +1,15 @@
-import { Entity, PrimaryGeneratedColumn, Column, CreateDateColumn, UpdateDateColumn, BeforeInsert } from "typeorm";
+import {
+    Entity,
+    PrimaryGeneratedColumn,
+    Column,
+    CreateDateColumn,
+    UpdateDateColumn,
+    BeforeInsert,
+    OneToMany,
+} from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import bcrypt from "bcrypt";
+import { Post } from "./Post";
 
 @Entity()
 export class User {
@@ -27,6 +36,12 @@ export class User {
 
     @UpdateDateColumn({ name: "updated_at" })
     public updatedAt: Date;
+
+    @OneToMany(
+        type => Post,
+        post => post.user,
+    )
+    public posts: Post[];
 
     @BeforeInsert()
     public async hashPassword() {
