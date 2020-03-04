@@ -1,6 +1,6 @@
 import { UserService } from "../services/UserService";
 import { PostService } from "../services/PostService";
-import { JsonController, Get, Param, Body, Post, UseBefore, Res } from "routing-controllers";
+import { JsonController, Get, Param, Body, Post, UseBefore, Res, QueryParam } from "routing-controllers";
 import { Post as PostEntity } from "../entities/Post";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
@@ -25,8 +25,8 @@ export class PostController {
     }
 
     @Get("")
-    public getAll(): Promise<PostEntity[]> {
-        return this.postService.getAllPosts();
+    public getAll(@QueryParam("offset") offset: number, @QueryParam("limit") limit: number): Promise<PostEntity[]> {
+        return this.postService.getPosts(offset, limit);
     }
 
     @Get("/:id")

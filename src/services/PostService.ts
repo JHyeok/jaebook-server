@@ -12,9 +12,8 @@ export class PostService {
         return newPost;
     }
 
-    public getAllPosts(): Promise<Post[]> {
-        return this.postRepository.getPosts();
-        // return this.postRepository.find();
+    public getPosts(offset: number, limit: number): Promise<Post[]> {
+        return this.postRepository.getPosts(offset, limit);
     }
 
     public getPostById(id: string): Promise<Post> {

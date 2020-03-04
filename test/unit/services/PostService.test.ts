@@ -51,7 +51,7 @@ describe("PostService", () => {
     });
 
     it("포스트 목록을 반환한다", async () => {
-        const posts = await postService.getAllPosts();
+        const posts = await postService.getPosts(0, 20);
         expect(posts[0].title).toBe(request.title);
         expect(posts[0].previewContent).toBe(request.previewContent);
         expect(posts[0].user.realName).toBe(request.user.realName);
