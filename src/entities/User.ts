@@ -25,10 +25,10 @@ export class User {
     public email: string;
 
     @IsNotEmpty()
-    @Column()
+    @Column({ select: false })
     public password: string;
 
-    @Column({ name: "refresh_token", nullable: true })
+    @Column({ name: "refresh_token", nullable: true, select: false })
     public refreshToekn: string;
 
     @CreateDateColumn({ name: "created_at" })
