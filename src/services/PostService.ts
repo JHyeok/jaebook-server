@@ -16,9 +16,21 @@ export class PostService {
         return this.postRepository.getPosts(offset, limit);
     }
 
-    public getPostById(id: string): Promise<Post> {
-        return this.postRepository.findOne({
-            where: { id: id },
-        });
+    public getPostById(postId: string): Promise<Post> {
+        return this.postRepository.getPostById(postId);
+    }
+
+    public async updatePost(postId: string, post: Partial<Post>, userId: string): Promise<Post> {
+        const postToUpdate = await this.postRepository.getPostById(postId);
+
+        if (postToUpdate.user.id === userId) {
+            postToUpdate.title = post.title;
+            postToUpdate.content = post.content;
+            postToUpdate.previewContent = post.content.substring(0, 100);
+            this.postRepository.save(postToUpdate);
+            return postToUpdate;
+        } else {
+            return null;
+        }
     }
 }

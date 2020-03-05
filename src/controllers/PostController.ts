@@ -1,6 +1,6 @@
 import { UserService } from "../services/UserService";
 import { PostService } from "../services/PostService";
-import { JsonController, Get, Param, Body, Post, UseBefore, Res, QueryParam } from "routing-controllers";
+import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, QueryParam } from "routing-controllers";
 import { Post as PostEntity } from "../entities/Post";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
@@ -32,5 +32,13 @@ export class PostController {
     @Get("/:id")
     public getOne(@Param("id") id: string): Promise<PostEntity> {
         return this.postService.getPostById(id);
+    }
+
+    @Put("/:id")
+    @UseBefore(checkAccessToken)
+    public update(@Param("id") id: string, @Body() post: PostEntity, @Res() res: Response): Promise<PostEntity> {
+        const { userId } = res.locals.jwtPayload;
+
+        return this.postService.updatePost(id, post, userId);
     }
 }

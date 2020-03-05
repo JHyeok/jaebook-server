@@ -34,6 +34,11 @@ describe("PostService", () => {
         },
     };
 
+    const updateRequest = {
+        title: "업데이트 제목 입니다.",
+        content: "업데이트 내용 입니다.",
+    };
+
     let newPostId: string;
 
     it("포스트를 생성한다", async () => {
@@ -56,5 +61,12 @@ describe("PostService", () => {
         expect(posts[0].previewContent).toBe(request.previewContent);
         expect(posts[0].user.realName).toBe(request.user.realName);
         expect(posts[0].user.email).toBe(request.user.email);
+    });
+
+    it("포스트를 수정한다", async () => {
+        const post = await postService.updatePost(newPostId, updateRequest, request.user.id);
+        expect(post).toBeInstanceOf(Post);
+        expect(post.title).toBe(updateRequest.title);
+        expect(post.content).toBe(updateRequest.content);
     });
 });
