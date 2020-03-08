@@ -12,7 +12,8 @@ TypeScript와 Express를 사용해서 만든 서버
 - **Routing-Controllers** 구조적이고 선언적이며 아름답게 구성된 클래스 기반 컨트롤러
 - **JWT** AccessToken, RefreshToken을 이용
 - **ESLint, Prettier** 코드 스타일 일관성 유지
-- **Jest** 테스트 코드 작성
+- **Jest** 단위 테스트
+- **SuperTest** E2E 테스트
 
 ### Environment Variable Management
 
@@ -39,3 +40,10 @@ Steps to run this project:
 1. Run `yarn install` command
 2. Run `docker-compose up` command
 3. Run `yarn start` command
+
+### Tests
+
+```sh
+# e2e, unit tests
+$ yarn test
+```
