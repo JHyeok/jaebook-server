@@ -3,7 +3,7 @@ import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
 import { AuthService } from "../../../src/services/AuthService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
 import { User } from "../../../src/entities/User";
-import { UserSeed } from "../seeds/UserTestSeed";
+import { UserSeed } from "../../utils/seeds/UserTestSeed";
 
 describe("AuthService", () => {
     let db: Connection;

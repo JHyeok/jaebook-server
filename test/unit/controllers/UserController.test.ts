@@ -3,7 +3,7 @@ import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
 import { UserController } from "../../../src/controllers/UserController";
 import { UserService } from "../../../src/services/UserService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
-import { UserSeed } from "../seeds/UserTestSeed";
+import { UserSeed } from "../../utils/seeds/UserTestSeed";
 
 describe("UserController", () => {
     let db: Connection;

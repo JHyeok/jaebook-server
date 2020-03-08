@@ -3,8 +3,7 @@ import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
 import { PostRepository } from "../../../src/repositories/PostRepository";
 import { UserRepository } from "../../../src/repositories/UserRepository";
 import { PostService } from "../../../src/services/PostService";
-import { UserSeed } from "../seeds/UserTestSeed";
-import { User } from "../../../src/entities/User";
+import { UserSeed } from "../../utils/seeds/UserTestSeed";
 import { Post } from "../../../src/entities/Post";
 
 describe("PostService", () => {
@@ -15,7 +14,7 @@ describe("PostService", () => {
 
     beforeAll(async () => {
         db = await createMemoryDatabase();
-        userRepository = db.getRepository(User);
+        userRepository = db.getCustomRepository(UserRepository);
         await userRepository.save(UserSeed);
         postRepository = db.getCustomRepository(PostRepository);
         postService = new PostService(postRepository);

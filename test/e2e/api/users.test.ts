@@ -1,18 +1,18 @@
 import "reflect-metadata";
+import app from "../utils/testApp";
+import { agent, Response } from "supertest";
 import { Connection } from "typeorm";
 import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
-import { agent, Response } from "supertest";
-import app from "../utils/testApp";
 import { UserRepository } from "../../../src/repositories/UserRepository";
-import { UserSeed } from "../../unit/seeds/UserTestSeed";
-
-const setHeader = (): { Accept: string } => ({
-    Accept: "application/json",
-});
+import { UserSeed } from "../../utils/seeds/UserTestSeed";
 
 describe("GET /api/users", () => {
     let db: Connection;
     let userRepository: UserRepository;
+
+    const setHeader = (): { Accept: string } => ({
+        Accept: "application/json",
+    });
 
     beforeAll(async done => {
         db = await createMemoryDatabase();
@@ -30,6 +30,7 @@ describe("GET /api/users", () => {
             .expect(200)
             .end((err: any, res: Response) => {
                 const { body } = res;
+                expect(body[0].email).toEqual("hellojest@gmail.com");
                 expect(body[0].realName).toEqual("홍길동");
                 done();
             });

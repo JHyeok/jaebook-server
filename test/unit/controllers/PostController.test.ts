@@ -5,7 +5,7 @@ import { UserService } from "../../../src/services/UserService";
 import { PostService } from "../../../src/services/PostService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
 import { PostRepository } from "../../../src/repositories/PostRepository";
-import { PostSeed } from "../seeds/PostTestSeed";
+import { PostSeed } from "../../utils/seeds/PostTestSeed";
 
 describe("PostController", () => {
     let db: Connection;

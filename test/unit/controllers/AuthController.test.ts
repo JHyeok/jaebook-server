@@ -4,7 +4,7 @@ import { AuthController } from "../../../src/controllers/AuthController";
 import { UserService } from "../../../src/services/UserService";
 import { AuthService } from "../../../src/services/AuthService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
-import { UserSeed } from "../seeds/UserTestSeed";
+import { UserSeed } from "../../utils/seeds/UserTestSeed";
 
 describe("AuthController", () => {
     let db: Connection;
