@@ -3,7 +3,6 @@ import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
 import { UserController } from "../../../src/controllers/UserController";
 import { UserService } from "../../../src/services/UserService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
-import { User } from "../../../src/entities/User";
 import { UserSeed } from "../seeds/UserTestSeed";
 
 describe("UserController", () => {
@@ -14,7 +13,7 @@ describe("UserController", () => {
 
     beforeAll(async () => {
         db = await createMemoryDatabase();
-        userRepository = db.getRepository(User);
+        userRepository = db.getCustomRepository(UserRepository);
         userService = new UserService(userRepository);
         userController = new UserController(userService);
         await userRepository.save(UserSeed);

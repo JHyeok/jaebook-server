@@ -4,7 +4,6 @@ import { AuthController } from "../../../src/controllers/AuthController";
 import { UserService } from "../../../src/services/UserService";
 import { AuthService } from "../../../src/services/AuthService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
-import { User } from "../../../src/entities/User";
 import { UserSeed } from "../seeds/UserTestSeed";
 
 describe("AuthController", () => {
@@ -16,7 +15,7 @@ describe("AuthController", () => {
 
     beforeAll(async () => {
         db = await createMemoryDatabase();
-        userRepository = db.getRepository(User);
+        userRepository = db.getCustomRepository(UserRepository);
         userService = new UserService(userRepository);
         authService = new AuthService(userRepository);
         authController = new AuthController(authService, userService);
