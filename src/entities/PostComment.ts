@@ -6,16 +6,28 @@ import {
     UpdateDateColumn,
     ManyToOne,
     JoinColumn,
-    OneToMany,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { User } from "./User";
-import { PostComment } from "./PostComment";
+import { Post } from "./Post";
 
-@Entity({ name: "post" })
-export class Post {
+@Entity({ name: "post_comment" })
+export class PostComment {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
+
+    @Column({ name: "post_id", length: 36 })
+    public postId: string;
+
+    @Column({ name: "user_id", length: 36 })
+    public userId: string;
+
+    @ManyToOne(
+        type => Post,
+        post => post.id,
+    )
+    @JoinColumn({ name: "post_id" })
+    public post: Post;
 
     @ManyToOne(
         type => User,
@@ -25,27 +37,8 @@ export class Post {
     public user: User;
 
     @IsNotEmpty()
-    @Column({ name: "title" })
-    public title: string;
-
-    @IsNotEmpty()
-    @Column({ name: "content" })
-    public content: string;
-
-    @Column({ name: "preview_content", length: 100 })
-    public previewContent: string;
-
-    @Column({ default: 0 })
-    public view: number;
-
-    @Column({ default: 0 })
-    public like: number;
-
-    @OneToMany(
-        type => PostComment,
-        postComment => postComment.post,
-    )
-    public comments: PostComment[];
+    @Column({ name: "text" })
+    public text: string;
 
     @CreateDateColumn({ name: "created_at" })
     public createdAt: Date;
