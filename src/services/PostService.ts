@@ -20,6 +20,15 @@ export class PostService {
         return this.postRepository.getPostById(postId);
     }
 
+    /**
+     * 포스트의 조회수를 증가한다
+     * @param post 포스트
+     */
+    public async incrementPostView(post: Post): Promise<void> {
+        post.view = post.view + 1;
+        await this.postRepository.save(post);
+    }
+
     public async updatePost(postId: string, post: Partial<Post>, userId: string): Promise<Post> {
         const postToUpdate = await this.postRepository.getPostById(postId);
 
@@ -32,5 +41,24 @@ export class PostService {
         } else {
             return null;
         }
+    }
+
+    /**
+     * 포스트가 존재하는지 확인한다
+     * @param postId 포스트Id
+     * @returns true는 포스트가 존재, false는 포스트가 존재하지 않음
+     */
+    public async isPostById(postId: string): Promise<boolean> {
+        const post = await this.postRepository.findOne({
+            where: {
+                id: postId,
+            },
+        });
+
+        if (post) {
+            return true;
+        }
+
+        return false;
     }
 }

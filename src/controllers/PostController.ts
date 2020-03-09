@@ -30,8 +30,16 @@ export class PostController {
     }
 
     @Get("/:id")
-    public getOne(@Param("id") id: string): Promise<PostEntity> {
-        return this.postService.getPostById(id);
+    public async getOne(@Param("id") id: string): Promise<PostEntity> {
+        const post = await this.postService.getPostById(id);
+
+        if (post === undefined) {
+            return post;
+        } else {
+            await this.postService.incrementPostView(post);
+        }
+
+        return post;
     }
 
     @Put("/:id")

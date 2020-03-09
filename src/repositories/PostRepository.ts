@@ -15,14 +15,6 @@ export class PostRepository extends Repository<Post> {
 
     public async getPostById(postId: string) {
         return this.createQueryBuilder("post")
-            .select([
-                "post.id",
-                "post.title",
-                "post.content",
-                "post.previewContent",
-                "post.createdAt",
-                "post.updatedAt",
-            ])
             .leftJoinAndSelect("post.user", "user")
             .where("post.id = :postId", { postId })
             .getOne();
