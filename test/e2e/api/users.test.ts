@@ -18,7 +18,7 @@ describe("GET /api/users", () => {
         db = await createMemoryDatabase();
         userRepository = db.getCustomRepository(UserRepository);
         await userRepository.save(UserSeed);
-        setTimeout(done, 1000);
+        done();
     });
 
     afterAll(() => db.close());
