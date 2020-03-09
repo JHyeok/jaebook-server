@@ -1,19 +1,34 @@
 import {
     Entity,
     PrimaryGeneratedColumn,
-    Column,
     CreateDateColumn,
     UpdateDateColumn,
     ManyToOne,
     JoinColumn,
+    Column,
+    Index,
 } from "typeorm";
-import { IsNotEmpty } from "class-validator";
 import { User } from "./User";
+import { Post } from "./Post";
 
-@Entity({ name: "post" })
-export class Post {
+@Entity({ name: "post_like" })
+@Index(["postId", "userId"], { unique: true })
+export class PostLike {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
+
+    @Column({ name: "post_id", length: 36 })
+    postId: string;
+
+    @Column({ name: "user_id", length: 36 })
+    userId: string;
+
+    @ManyToOne(
+        type => Post,
+        post => post.id,
+    )
+    @JoinColumn({ name: "post_id" })
+    public post: Post;
 
     @ManyToOne(
         type => User,
@@ -21,23 +36,6 @@ export class Post {
     )
     @JoinColumn({ name: "user_id" })
     public user: User;
-
-    @IsNotEmpty()
-    @Column({ name: "title" })
-    public title: string;
-
-    @IsNotEmpty()
-    @Column({ name: "content" })
-    public content: string;
-
-    @Column({ name: "preview_content", length: 100 })
-    public previewContent: string;
-
-    @Column({ default: 0 })
-    public view: number;
-
-    @Column({ default: 0 })
-    public like: number;
 
     @CreateDateColumn({ name: "created_at" })
     public createdAt: Date;

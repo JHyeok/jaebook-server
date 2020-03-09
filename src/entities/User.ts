@@ -11,7 +11,7 @@ import { IsNotEmpty } from "class-validator";
 import bcrypt from "bcrypt";
 import { Post } from "./Post";
 
-@Entity()
+@Entity({ name: "user" })
 export class User {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
