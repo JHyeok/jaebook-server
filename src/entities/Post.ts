@@ -20,6 +20,7 @@ export class Post {
     @ManyToOne(
         type => User,
         user => user.id,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinColumn({ name: "user_id" })
     public user: User;

@@ -25,6 +25,7 @@ export class PostComment {
     @ManyToOne(
         type => Post,
         post => post.id,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinColumn({ name: "post_id" })
     public post: Post;
@@ -32,6 +33,7 @@ export class PostComment {
     @ManyToOne(
         type => User,
         user => user.id,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinColumn({ name: "user_id" })
     public user: User;

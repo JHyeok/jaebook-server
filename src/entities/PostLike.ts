@@ -18,14 +18,15 @@ export class PostLike {
     public id: string;
 
     @Column({ name: "post_id", length: 36 })
-    postId: string;
+    public postId: string;
 
     @Column({ name: "user_id", length: 36 })
-    userId: string;
+    public userId: string;
 
     @ManyToOne(
         type => Post,
         post => post.id,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinColumn({ name: "post_id" })
     public post: Post;
@@ -33,6 +34,7 @@ export class PostLike {
     @ManyToOne(
         type => User,
         user => user.id,
+        { cascade: true, onDelete: "CASCADE" },
     )
     @JoinColumn({ name: "user_id" })
     public user: User;
