@@ -17,8 +17,6 @@ export class PostCommentService {
     }
 
     public async getCommentByPostId(postId: string): Promise<PostComment[]> {
-        return this.postCommentRepository.find({
-            where: { postId: postId },
-        });
+        return this.postCommentRepository.getCommentsByPostId(postId);
     }
 }
