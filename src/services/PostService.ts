@@ -43,6 +43,17 @@ export class PostService {
         }
     }
 
+    public async deletePost(postId: string, userId: string): Promise<boolean> {
+        const postToDelete = await this.postRepository.getPostById(postId);
+
+        if (postToDelete.user.id === userId) {
+            await this.postRepository.delete({ id: postId });
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * 포스트가 존재하는지 확인한다
      * @param postId 포스트Id

@@ -1,6 +1,6 @@
 import { UserService } from "../services/UserService";
 import { PostService } from "../services/PostService";
-import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, QueryParam } from "routing-controllers";
+import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, QueryParam, Delete } from "routing-controllers";
 import { Post as PostEntity } from "../entities/Post";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
@@ -48,5 +48,18 @@ export class PostController {
         const { userId } = res.locals.jwtPayload;
 
         return this.postService.updatePost(id, post, userId);
+    }
+
+    @Delete("/:id")
+    @UseBefore(checkAccessToken)
+    public async delete(@Param("id") id: string, @Res() res: Response) {
+        const { userId } = res.locals.jwtPayload;
+
+        const result = await this.postService.deletePost(id, userId);
+
+        return {
+            postId: id,
+            isDelete: result,
+        };
     }
 }

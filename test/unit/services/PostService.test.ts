@@ -47,6 +47,16 @@ describe("PostService", () => {
         expect(newPost.content).toBe(request.content);
     });
 
+    it("Id가 일치하는 포스트를 찾아서 true를 반환한다", async () => {
+        const result = await postService.isPostById(newPostId);
+        expect(result).toBeTruthy();
+    });
+
+    it("Id가 일치하는 포스트를 찾지 못해서 false를 반환한다", async () => {
+        const result = await postService.isPostById("notPostId");
+        expect(result).toBeFalsy();
+    });
+
     it("Id가 일치하는 포스트를 찾아서 포스트 정보를 반환한다", async () => {
         const post = await postService.getPostById(newPostId);
         expect(post).toBeInstanceOf(Post);
@@ -67,5 +77,20 @@ describe("PostService", () => {
         expect(post).toBeInstanceOf(Post);
         expect(post.title).toBe(updateRequest.title);
         expect(post.content).toBe(updateRequest.content);
+    });
+
+    it("권한이 없는 사람이 포스트 수정에 실패한다", async () => {
+        const post = await postService.updatePost(newPostId, updateRequest, "notUserId");
+        expect(post).toBeNull();
+    });
+
+    it("권한이 없는 사람이 포스트 삭제에 실패한다", async () => {
+        const result = await postService.deletePost(newPostId, "notUserId");
+        expect(result).toBeFalsy();
+    });
+
+    it("권한이 있는 사람이 포스트 삭제에 성공한다", async () => {
+        const result = await postService.deletePost(newPostId, request.user.id);
+        expect(result).toBeTruthy();
     });
 });
