@@ -12,7 +12,7 @@ export const env = {
     isTest: process.env.NODE_ENV === "test",
     app: {
         port: Number(process.env.PORT) || 3000,
-        apiPrefix: process.env.API_PREFIX || "api",
+        apiPrefix: process.env.API_PREFIX || "/api",
         jwtAccessSecret: process.env.JWT_SECRET_ACCESS_KEY,
         jwtRefreshSecret: process.env.JWT_SECRET_REFRESH_KEY,
     },
