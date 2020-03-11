@@ -4,7 +4,9 @@ import bodyParser from "body-parser";
 import { createDatabaseConnection } from "./database";
 import { env } from "./env";
 import { Container } from "typedi";
-import { createExpressServer, useContainer as routingUseContainer } from "routing-controllers";
+import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
+import { routingControllerOptions } from "./utils/RoutingConfig";
+import { useSwagger } from "./utils/Swagger";
 
 export class App {
     public app: express.Application;
@@ -28,13 +30,8 @@ export class App {
         const port: number = env.app.port;
 
         routingUseContainer(Container);
-
-        this.app = createExpressServer({
-            cors: true,
-            routePrefix: env.app.apiPrefix,
-            controllers: [`${__dirname}/controllers/*.[jt]s`],
-            middlewares: [`${__dirname}/middlewares/*.[jt]s`],
-        });
+        useExpressServer(this.app, routingControllerOptions);
+        useSwagger(this.app);
 
         this.app.listen(port, () => {
             console.log(`Server is running on http://localhost:${port}`);

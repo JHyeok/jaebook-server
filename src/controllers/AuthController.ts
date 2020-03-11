@@ -4,17 +4,16 @@ import { checkAccessToken, generateAccessToken, generateRefreshToken } from "../
 import { Response } from "express";
 import { UserService } from "../services/UserService";
 import { User } from "../entities/User";
+import { OpenAPI } from "routing-controllers-openapi";
 
 @JsonController("/auth")
 export class AuthController {
     constructor(private authService: AuthService, private userService: UserService) {}
 
-    /**
-     * 사용자 로그인
-     * @param email 이메일
-     * @param password 비밀번호
-     */
     @Post("/login")
+    @OpenAPI({
+        description: "사용자 로그인",
+    })
     public async login(@BodyParam("email") email: string, @BodyParam("password") password: string) {
         const user = await this.authService.validateUser(email, password);
         if (!user) {
@@ -41,13 +40,10 @@ export class AuthController {
         };
     }
 
-    /**
-     * 사용자 회원가입
-     * @param realName 실제 이름
-     * @param email 이메일
-     * @param password 비밀번호
-     */
     @Post("/register")
+    @OpenAPI({
+        description: "사용자 회원가입",
+    })
     public async register(@Body() user: User) {
         const isDuplicateUser = await this.userService.isDuplicateUser(user.email);
 
@@ -77,11 +73,11 @@ export class AuthController {
         };
     }
 
-    /**
-     * JWT 테스트 API 엔드포인트
-     * @param res
-     */
     @Get("/protected")
+    @OpenAPI({
+        description: "JWT 테스트 API 엔드포인트",
+        security: [{ bearerAuth: [] }],
+    })
     @UseBefore(checkAccessToken)
     public async protected(@Res() res: Response) {
         const userEmail = res.locals.jwtPayload.userEmail;
