@@ -19,4 +19,32 @@ export class PostCommentService {
     public async getCommentByPostId(postId: string): Promise<PostComment[]> {
         return this.postCommentRepository.getCommentsByPostId(postId);
     }
+
+    public async updatePostComment(
+        postId: string,
+        commentId: string,
+        text: string,
+        userId: string,
+    ): Promise<PostComment> {
+        const postCommentToUpdate = await this.postCommentRepository.getCommentById(postId, commentId);
+
+        if (postCommentToUpdate?.userId === userId) {
+            postCommentToUpdate.text = text;
+            this.postCommentRepository.save(postCommentToUpdate);
+            return postCommentToUpdate;
+        }
+
+        return null;
+    }
+
+    public async deletePostComment(postId: string, commentId: string, userId: string): Promise<boolean> {
+        const postCommentToDelete = await this.postCommentRepository.getCommentById(postId, commentId);
+
+        if (postCommentToDelete?.userId === userId) {
+            await this.postCommentRepository.delete({ id: commentId });
+            return true;
+        }
+
+        return false;
+    }
 }
