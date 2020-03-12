@@ -1,8 +1,9 @@
 import { App } from "./app";
+import { logger } from "./utils/Logger";
 
 try {
     const app = new App();
     app.createExpressServer();
 } catch (error) {
-    console.log(error);
+    logger.error(error);
 }
