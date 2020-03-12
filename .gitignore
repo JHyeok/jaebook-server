@@ -5,6 +5,9 @@ build/
 tmp/
 temp/
 
+# Ignore log file
+logs/
+
 # Ignore dotenv file
 .env
 .env.development
