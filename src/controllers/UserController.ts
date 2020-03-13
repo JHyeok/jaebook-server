@@ -3,28 +3,29 @@ import { JsonController, Get, Param, Body, Post, Put, Delete, UseBefore, Res } f
 import { User } from "../entities/User";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
+import { OpenAPI } from "routing-controllers-openapi";
 
 @JsonController("/users")
 export class UserController {
     constructor(private userService: UserService) {}
 
-    /**
-     * AccessToken으로 현재 사용자 정보를 반환
-     * @param res
-     */
     @Get("/me")
+    @OpenAPI({
+        description: "AccessToken으로 현재 사용자 정보를 반환",
+        security: [{ bearerAuth: [] }],
+    })
     @UseBefore(checkAccessToken)
     public getMyProfile(@Res() res: Response) {
         const { userId, userName, userEmail } = res.locals.jwtPayload;
 
-        const userInfo = {
+        const user = {
             id: userId,
             realName: userName,
             email: userEmail,
         };
 
         return {
-            userInfo,
+            user,
         };
     }
 

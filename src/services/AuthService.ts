@@ -9,7 +9,7 @@ export class AuthService {
 
     public async validateUser(email: string, password: string): Promise<User> {
         const user = await this.userRepository.findOne({
-            select: ["id", "realName", "email", "createdAt", "updatedAt", "password"],
+            select: ["id", "realName", "email", "password"],
             where: {
                 email,
             },
@@ -21,6 +21,22 @@ export class AuthService {
             if (isPasswordMatch) {
                 return user;
             }
+        }
+
+        return undefined;
+    }
+
+    public async validateUserToken(userId: string, refreshToekn: string): Promise<User> {
+        const user = await this.userRepository.findOne({
+            select: ["id", "realName", "email"],
+            where: {
+                id: userId,
+                refreshToekn: refreshToekn,
+            },
+        });
+
+        if (user) {
+            return user;
         }
 
         return undefined;

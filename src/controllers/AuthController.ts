@@ -1,6 +1,11 @@
 import { AuthService } from "../services/AuthService";
-import { JsonController, Post, BodyParam, UseBefore, Get, Res, Body } from "routing-controllers";
-import { checkAccessToken, generateAccessToken, generateRefreshToken } from "../middlewares/AuthMiddleware";
+import { JsonController, Post, BodyParam, UseBefore, Get, Res, Body, NotFoundError } from "routing-controllers";
+import {
+    checkAccessToken,
+    checkRefreshToken,
+    generateAccessToken,
+    generateRefreshToken,
+} from "../middlewares/AuthMiddleware";
 import { Response } from "express";
 import { UserService } from "../services/UserService";
 import { User } from "../entities/User";
@@ -16,9 +21,10 @@ export class AuthController {
     })
     public async login(@BodyParam("email") email: string, @BodyParam("password") password: string) {
         const user = await this.authService.validateUser(email, password);
+
         if (!user) {
             return {
-                code: "ERR_LOGIN_EMAIL_PASSWORD",
+                error: true,
                 message: "유효하지 않은 사용자 이메일/비밀번호 입니다.",
             };
         }
@@ -27,14 +33,7 @@ export class AuthController {
         const refreshToken = generateRefreshToken(user);
         await this.authService.saveRefreshToken(user, refreshToken);
 
-        const userInfo = {
-            id: user.id,
-            realName: user.realName,
-            email: user.email,
-        };
-
         return {
-            userInfo,
             accessToken: accessToken,
             refreshToken: refreshToken,
         };
@@ -49,7 +48,7 @@ export class AuthController {
 
         if (isDuplicateUser) {
             return {
-                code: "ERR_REGISTER_DUPLICATE_EMAIL",
+                error: true,
                 message: "이미 사용 중인 이메일입니다.",
             };
         }
@@ -67,7 +66,30 @@ export class AuthController {
         };
 
         return {
-            userInfo,
+            user: userInfo,
+            accessToken: accessToken,
+            refreshToken: refreshToken,
+        };
+    }
+
+    @Post("/token/refresh")
+    @OpenAPI({
+        description: "RefreshToken을 이용해서 AccessToken을 재발급(새로고침)",
+    })
+    @UseBefore(checkRefreshToken)
+    public async refreshToken(@Res() res: Response) {
+        const userId = res.locals.jwtPayload.userId;
+        const refreshToken = res.locals.token;
+
+        const user = await this.authService.validateUserToken(userId, refreshToken);
+
+        if (!user) {
+            throw new NotFoundError(`유저 정보와 RefreshToken이 일치하지 않습니다.`);
+        }
+
+        const accessToken = generateAccessToken(user);
+
+        return {
             accessToken: accessToken,
             refreshToken: refreshToken,
         };
@@ -81,6 +103,6 @@ export class AuthController {
     @UseBefore(checkAccessToken)
     public async protected(@Res() res: Response) {
         const userEmail = res.locals.jwtPayload.userEmail;
-        return `You successfully reached This protected endpoint, ${userEmail}`;
+        return `JWT 인증테스트에 통과!, ${userEmail}`;
     }
 }
