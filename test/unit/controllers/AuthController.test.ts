@@ -32,31 +32,33 @@ describe("AuthController", () => {
 
     it("POST /api/auth/register 를 성공한다", async () => {
         const result = await authController.register(userRequest as any);
-        expect(result.userInfo.email).toBe(userRequest.email);
-        expect(result.userInfo.realName).toBe(userRequest.realName);
+        expect(result.user.email).toBe(userRequest.email);
+        expect(result.user.realName).toBe(userRequest.realName);
+        expect(result.accessToken).toBeDefined();
+        expect(result.refreshToken).toBeDefined();
     });
 
     it("중복된 이메일로 POST /api/auth/register 에서 오류를 반환한다", async () => {
         const result = await authController.register(userRequest as any);
-        expect(result.code).toBe("ERR_REGISTER_DUPLICATE_EMAIL");
+        expect(result.error).toBeTruthy;
         expect(result.message).toBe("이미 사용 중인 이메일입니다.");
     });
 
     it("POST /api/auth/login 을 성공한다", async () => {
         const result = await authController.login("hellojest@gmail.com", "password");
-        expect(result.userInfo.email).toBe("hellojest@gmail.com");
-        expect(result.userInfo.realName).toBe("홍길동");
+        expect(result.accessToken).toBeDefined();
+        expect(result.refreshToken).toBeDefined();
     });
 
     it("틀린 이메일로 POST /api/auth/login 에서 오류를 반환한다", async () => {
         const result = await authController.login("null@gmail.com", "password");
-        expect(result.code).toBe("ERR_LOGIN_EMAIL_PASSWORD");
+        expect(result.error).toBeTruthy;
         expect(result.message).toBe("유효하지 않은 사용자 이메일/비밀번호 입니다.");
     });
 
     it("틀린 비밀번호로 POST /api/auth/login 에서 오류를 반환한다", async () => {
         const result = await authController.login("hellojest@gmail.com", "notpassword");
-        expect(result.code).toBe("ERR_LOGIN_EMAIL_PASSWORD");
+        expect(result.error).toBeTruthy;
         expect(result.message).toBe("유효하지 않은 사용자 이메일/비밀번호 입니다.");
     });
 });

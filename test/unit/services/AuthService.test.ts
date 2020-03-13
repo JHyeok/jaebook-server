@@ -19,26 +19,38 @@ describe("AuthService", () => {
 
     afterAll(() => db.close());
 
-    const userRequest = {
+    const request = {
+        id: "6d2deecf-a0f7-470f-b31f-ede0024efece",
         realName: "홍길동",
         email: "hellojest@gmail.com",
         password: "password",
+        refreshToken:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjOGM5ODhiOS1hZTNhLTRmNjgtOTVkZi0zNWNjM2JjZDRhNWUiLCJpYXQiOjE1ODMxMTU4OTYsImV4cCI6MTU4NDMyNTQ5Nn0.w9Yze38ys8OIGmde7HEH2Gj_xZe0uIy7Di4Od5zzSP4",
     };
 
-    it("이메일과 비밀번호가 맞으면 유저 정보를 반환한다", async () => {
-        const user = await authService.validateUser(userRequest.email, userRequest.password);
+    it("이메일과 비밀번호가 일치하면 유저 정보를 반환한다", async () => {
+        const user = await authService.validateUser(request.email, request.password);
         expect(user).toBeInstanceOf(User);
-        expect(user.realName).toBe(userRequest.realName);
-        expect(user.email).toBe(userRequest.email);
+        expect(user.id).toBe(request.id);
+        expect(user.realName).toBe(request.realName);
+        expect(user.email).toBe(request.email);
     });
 
-    it("이메일이 틀리면 undefined를 반환한다", async () => {
-        const user = await authService.validateUser("null@gmail.com", userRequest.password);
+    it("이메일과 비밀번호가 일치하지 않으면 undefined를 반환한다", async () => {
+        const user = await authService.validateUser(request.email, "notpassword");
         expect(user).toBeUndefined();
     });
 
-    it("비밀번호가 틀리면 undefined를 반환한다", async () => {
-        const user = await authService.validateUser(userRequest.email, "notpassword");
+    it("유저Id와 토큰이 일치하면 유저 정보를 반환한다", async () => {
+        const user = await authService.validateUserToken(request.id, request.refreshToken);
+        expect(user).toBeInstanceOf(User);
+        expect(user.id).toBe(request.id);
+        expect(user.realName).toBe(request.realName);
+        expect(user.email).toBe(request.email);
+    });
+
+    it("유저Id와 토큰이 일치하지 않으면 undefined를 반환한다", async () => {
+        const user = await authService.validateUserToken(request.id, "not token");
         expect(user).toBeUndefined();
     });
 });

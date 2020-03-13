@@ -4,7 +4,8 @@ export const UserSeed = [
         realName: "홍길동",
         email: "hellojest@gmail.com",
         password: "$2b$10$i6AcxEJCQPk1drzRz.t65e/LpI8FkAYfIk.cvyxuthgIMzaKZlHJy",
-        refreshToekn: null,
+        refreshToekn:
+            "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjOGM5ODhiOS1hZTNhLTRmNjgtOTVkZi0zNWNjM2JjZDRhNWUiLCJpYXQiOjE1ODMxMTU4OTYsImV4cCI6MTU4NDMyNTQ5Nn0.w9Yze38ys8OIGmde7HEH2Gj_xZe0uIy7Di4Od5zzSP4",
         createdAt: `${new Date()}`,
         updatedAt: `${new Date()}`,
     },
