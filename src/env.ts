@@ -22,7 +22,7 @@ export const env = {
         usename: process.env.DATABASE_USERNAME,
         password: process.env.DATABASE_PASSWORD,
         name: process.env.DATABASE_NAME,
-        synchronize: Boolean(process.env.TYPEORM_SYNCHRONIZE),
-        logging: Boolean(process.env.TYPEORM_LOGGING),
+        synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",
+        logging: process.env.TYPEORM_LOGGING === "true",
     },
 };
