@@ -5,7 +5,7 @@ import { Post } from "../entities/Post";
 export class PostRepository extends Repository<Post> {
     public async getPosts(offset: number, limit: number) {
         return this.createQueryBuilder("post")
-            .select(["post.id", "post.title", "post.previewContent", "post.createdAt"])
+            .select(["post.id", "post.title", "post.previewContent", "post.createdAt", "post.view", "post.like"])
             .leftJoinAndSelect("post.user", "user")
             .orderBy("post.createdAt", "DESC")
             .skip(offset)
