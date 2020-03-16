@@ -14,6 +14,7 @@ function setExpress() {
     useExpressServer(app, {
         routePrefix: "/api",
         controllers: [__dirname + "/../../../src/controllers/*{.ts,.js}"],
+        middlewares: [__dirname + "/../../../src/middlewares/*{.ts,.js}"],
     });
 }
 

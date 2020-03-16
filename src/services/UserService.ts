@@ -12,28 +12,11 @@ export class UserService {
         return newUser;
     }
 
-    public getAllUsers(): Promise<User[]> {
-        return this.userRepository.find({
-            select: ["id", "email", "realName", "createdAt"],
-        });
-    }
-
     public getUsersById(id: string): Promise<User> {
         return this.userRepository.findOne({
             select: ["id", "email", "realName", "createdAt"],
             where: { id: id },
         });
-    }
-
-    public updateUser(id: string, user: User): Promise<User> {
-        user.id = id;
-        return this.userRepository.save(user);
-    }
-
-    public async deleteUser(id: string): Promise<string> {
-        const userToRemove = await this.userRepository.findOne(id);
-        this.userRepository.remove(userToRemove);
-        return `remove user: ${id}`;
     }
 
     /**

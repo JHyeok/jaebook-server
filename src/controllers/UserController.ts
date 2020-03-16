@@ -1,5 +1,5 @@
 import { UserService } from "../services/UserService";
-import { JsonController, Get, Param, Body, Post, Put, Delete, UseBefore, Res } from "routing-controllers";
+import { JsonController, Get, Param, UseBefore, Res, HttpCode } from "routing-controllers";
 import { User } from "../entities/User";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
@@ -9,9 +9,12 @@ import { OpenAPI } from "routing-controllers-openapi";
 export class UserController {
     constructor(private userService: UserService) {}
 
+    @HttpCode(200)
     @Get("/me")
     @OpenAPI({
-        description: "AccessToken으로 현재 사용자 정보를 반환",
+        summary: "사용자 정보",
+        description: "AccessToken으로 사용자 정보를 반환한다",
+        statusCode: "200",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
@@ -29,28 +32,15 @@ export class UserController {
         };
     }
 
-    @Post()
-    public create(@Body() user: User): Promise<User> {
-        return this.userService.createUser(user);
-    }
-
-    @Get("")
-    public getAll(): Promise<User[]> {
-        return this.userService.getAllUsers();
-    }
-
+    @HttpCode(200)
     @Get("/:id")
+    @OpenAPI({
+        summary: "사용자 정보",
+        description: "UserId로 사용자 정보를 반환한다",
+        statusCode: "200",
+        security: [{ bearerAuth: [] }],
+    })
     public getOne(@Param("id") id: string): Promise<User> {
         return this.userService.getUsersById(id);
-    }
-
-    @Put("/:id")
-    public update(@Param("id") id: string, @Body() user: User): Promise<User> {
-        return this.userService.updateUser(id, user);
-    }
-
-    @Delete("/:id")
-    public delete(@Param("id") id: string): Promise<string> {
-        return this.userService.deleteUser(id);
     }
 }

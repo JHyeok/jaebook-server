@@ -21,30 +21,16 @@ describe("UserController", () => {
 
     afterAll(() => db.close());
 
-    const userRequest = {
+    const request = {
+        id: "6d2deecf-a0f7-470f-b31f-ede0024efece",
         realName: "홍길동",
         email: "hellojest@gmail.com",
         password: "password",
     };
 
-    let testUserId: string;
-
-    it("GET /api/users 를 성공한다", async () => {
-        const result = await userController.getAll();
-        expect(result[0].email).toBe(UserSeed[0].email);
-        expect(result[0].realName).toBe(UserSeed[0].realName);
-    });
-
-    it("POST /api/users 를 성공한다", async () => {
-        const result = await userController.create(userRequest as any);
-        testUserId = result.id;
-        expect(result.email).toBe(userRequest.email);
-        expect(result.realName).toBe(userRequest.realName);
-    });
-
     it("GET /api/users/:id 를 성공한다", async () => {
-        const result = await userController.getOne(testUserId);
-        expect(result.email).toBe(userRequest.email);
-        expect(result.realName).toBe(userRequest.realName);
+        const result = await userController.getOne(request.id);
+        expect(result.email).toBe(request.email);
+        expect(result.realName).toBe(request.realName);
     });
 });

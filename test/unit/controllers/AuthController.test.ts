@@ -49,16 +49,4 @@ describe("AuthController", () => {
         expect(result.accessToken).toBeDefined();
         expect(result.refreshToken).toBeDefined();
     });
-
-    it("틀린 이메일로 POST /api/auth/login 에서 오류를 반환한다", async () => {
-        const result = await authController.login("null@gmail.com", "password");
-        expect(result.error).toBeTruthy;
-        expect(result.message).toBe("유효하지 않은 사용자 이메일/비밀번호 입니다.");
-    });
-
-    it("틀린 비밀번호로 POST /api/auth/login 에서 오류를 반환한다", async () => {
-        const result = await authController.login("hellojest@gmail.com", "notpassword");
-        expect(result.error).toBeTruthy;
-        expect(result.message).toBe("유효하지 않은 사용자 이메일/비밀번호 입니다.");
-    });
 });
