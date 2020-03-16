@@ -39,7 +39,7 @@ export class PostComment {
     public user: User;
 
     @IsNotEmpty()
-    @Column({ name: "text" })
+    @Column({ type: "text" })
     public text: string;
 
     @CreateDateColumn({ name: "created_at" })

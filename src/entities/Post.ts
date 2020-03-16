@@ -26,11 +26,11 @@ export class Post {
     public user: User;
 
     @IsNotEmpty()
-    @Column({ name: "title" })
+    @Column()
     public title: string;
 
     @IsNotEmpty()
-    @Column({ name: "content" })
+    @Column({ type: "text" })
     public content: string;
 
     @Column({ name: "preview_content", length: 100 })
