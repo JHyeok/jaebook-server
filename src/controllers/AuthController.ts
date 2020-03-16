@@ -1,5 +1,15 @@
 import { AuthService } from "../services/AuthService";
-import { JsonController, Post, BodyParam, UseBefore, Get, Res, Body, NotFoundError } from "routing-controllers";
+import {
+    JsonController,
+    Post,
+    BodyParam,
+    UseBefore,
+    Get,
+    Res,
+    Body,
+    HttpCode,
+    UnauthorizedError,
+} from "routing-controllers";
 import {
     checkAccessToken,
     checkRefreshToken,
@@ -15,18 +25,17 @@ import { OpenAPI } from "routing-controllers-openapi";
 export class AuthController {
     constructor(private authService: AuthService, private userService: UserService) {}
 
+    @HttpCode(200)
     @Post("/login")
     @OpenAPI({
-        description: "사용자 로그인",
+        summary: "사용자 로그인",
+        statusCode: "200",
     })
     public async login(@BodyParam("email") email: string, @BodyParam("password") password: string) {
         const user = await this.authService.validateUser(email, password);
 
         if (!user) {
-            return {
-                error: true,
-                message: "유효하지 않은 사용자 이메일/비밀번호 입니다.",
-            };
+            throw new UnauthorizedError("유효하지 않은 사용자 이메일/비밀번호 입니다.");
         }
 
         const accessToken = generateAccessToken(user);
@@ -41,7 +50,8 @@ export class AuthController {
 
     @Post("/register")
     @OpenAPI({
-        description: "사용자 회원가입",
+        summary: "사용자 회원가입",
+        statusCode: "200",
     })
     public async register(@Body() user: User) {
         const isDuplicateUser = await this.userService.isDuplicateUser(user.email);
@@ -72,9 +82,12 @@ export class AuthController {
         };
     }
 
+    @HttpCode(200)
     @Post("/token/refresh")
     @OpenAPI({
+        summary: "토큰 재발급",
         description: "RefreshToken을 이용해서 AccessToken을 재발급(새로고침)",
+        statusCode: "200",
     })
     @UseBefore(checkRefreshToken)
     public async refreshToken(@Res() res: Response) {
@@ -84,7 +97,7 @@ export class AuthController {
         const user = await this.authService.validateUserToken(userId, refreshToken);
 
         if (!user) {
-            throw new NotFoundError(`유저 정보와 RefreshToken이 일치하지 않습니다.`);
+            throw new UnauthorizedError(`유저 정보와 RefreshToken이 일치하지 않습니다.`);
         }
 
         const accessToken = generateAccessToken(user);
@@ -95,9 +108,11 @@ export class AuthController {
         };
     }
 
+    @HttpCode(200)
     @Get("/protected")
     @OpenAPI({
-        description: "JWT 테스트 API 엔드포인트",
+        summary: "JWT 테스트 API 엔드포인트",
+        statusCode: "200",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)

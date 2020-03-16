@@ -1,6 +1,6 @@
 import { PostService } from "../services/PostService";
 import { PostCommentService } from "../services/PostCommentService";
-import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, Delete } from "routing-controllers";
+import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, Delete, HttpCode } from "routing-controllers";
 import { PostComment } from "../entities/PostComment";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
@@ -10,9 +10,11 @@ import { OpenAPI } from "routing-controllers-openapi";
 export class PostCommentController {
     constructor(private postService: PostService, private postCommentService: PostCommentService) {}
 
+    @HttpCode(201)
     @Post("/:postId/comments")
     @OpenAPI({
-        description: "Post 댓글 작성",
+        summary: "Post 댓글 작성",
+        statusCode: "201",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
@@ -32,10 +34,11 @@ export class PostCommentController {
         }
     }
 
+    @HttpCode(200)
     @Get("/:postId/comments")
     @OpenAPI({
-        description: "Post 댓글 조회",
-        security: [{ bearerAuth: [] }],
+        summary: "Post 댓글 조회",
+        statusCode: "200",
     })
     public async getAll(@Param("postId") postId: string): Promise<PostComment[]> {
         const isPost = await this.postService.isPostById(postId);
@@ -47,9 +50,11 @@ export class PostCommentController {
         }
     }
 
+    @HttpCode(200)
     @Put("/:postId/comments/:id")
     @OpenAPI({
-        description: "Post 댓글 수정",
+        summary: "Post 댓글 수정",
+        statusCode: "200",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
@@ -64,9 +69,11 @@ export class PostCommentController {
         return this.postCommentService.updatePostComment(postId, commentId, postComment.text, userId);
     }
 
+    @HttpCode(200)
     @Delete("/:postId/comments/:id")
     @OpenAPI({
-        description: "Post 댓글 삭제",
+        summary: "Post 댓글 삭제",
+        statusCode: "200",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
