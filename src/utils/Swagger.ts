@@ -5,6 +5,7 @@ import { getFromContainer, MetadataStorage } from "class-validator";
 import { routingControllersToSpec } from "routing-controllers-openapi";
 import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { routingControllerOptions } from "./RoutingConfig";
+import { env } from "../env";
 
 export function useSwagger(app: express.Application) {
     // Parse class-validator classes into JSON Schema:
@@ -33,5 +34,5 @@ export function useSwagger(app: express.Application) {
         },
     });
 
-    app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(spec));
+    app.use(env.swagger.route, swaggerUi.serve, swaggerUi.setup(spec));
 }
