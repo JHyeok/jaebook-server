@@ -25,4 +25,10 @@ export const env = {
         synchronize: process.env.TYPEORM_SYNCHRONIZE === "true",
         logging: process.env.TYPEORM_LOGGING === "true",
     },
+    swagger: {
+        route: process.env.SWAGGER_ROUTE,
+    },
+    sentry: {
+        dsn: process.env.SENTRY_DSN,
+    },
 };
