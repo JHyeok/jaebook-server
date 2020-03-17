@@ -1,15 +1,5 @@
 import { AuthService } from "../services/AuthService";
-import {
-    JsonController,
-    Post,
-    BodyParam,
-    UseBefore,
-    Get,
-    Res,
-    Body,
-    HttpCode,
-    UnauthorizedError,
-} from "routing-controllers";
+import { JsonController, Post, BodyParam, UseBefore, Get, Res, Body, HttpCode } from "routing-controllers";
 import {
     checkAccessToken,
     checkRefreshToken,
@@ -31,11 +21,15 @@ export class AuthController {
         summary: "사용자 로그인",
         statusCode: "200",
     })
-    public async login(@BodyParam("email") email: string, @BodyParam("password") password: string) {
+    public async login(
+        @BodyParam("email") email: string,
+        @BodyParam("password") password: string,
+        @Res() res: Response,
+    ) {
         const user = await this.authService.validateUser(email, password);
 
         if (!user) {
-            throw new UnauthorizedError("유효하지 않은 사용자 이메일/비밀번호 입니다.");
+            return res.status(401).send({ message: "유효하지 않은 사용자 이메일/비밀번호 입니다." });
         }
 
         const accessToken = generateAccessToken(user);
@@ -48,6 +42,7 @@ export class AuthController {
         };
     }
 
+    @HttpCode(200)
     @Post("/register")
     @OpenAPI({
         summary: "사용자 회원가입",
@@ -97,7 +92,7 @@ export class AuthController {
         const user = await this.authService.validateUserToken(userId, refreshToken);
 
         if (!user) {
-            throw new UnauthorizedError(`유저 정보와 RefreshToken이 일치하지 않습니다.`);
+            return res.status(401).send({ message: "유저 정보와 RefreshToken이 일치하지 않습니다." });
         }
 
         const accessToken = generateAccessToken(user);
@@ -109,15 +104,25 @@ export class AuthController {
     }
 
     @HttpCode(200)
-    @Get("/protected")
+    @Get("/user")
     @OpenAPI({
-        summary: "JWT 테스트 API 엔드포인트",
+        summary: "사용자 정보",
+        description: "AccessToken으로 사용자 정보를 반환한다(Front에서 Token 인증 용도로 사용한다)",
         statusCode: "200",
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async protected(@Res() res: Response) {
-        const userEmail = res.locals.jwtPayload.userEmail;
-        return `JWT 인증테스트에 통과!, ${userEmail}`;
+    public auth(@Res() res: Response) {
+        const { userId, userName, userEmail } = res.locals.jwtPayload;
+
+        const user = {
+            id: userId,
+            realName: userName,
+            email: userEmail,
+        };
+
+        return {
+            user,
+        };
     }
 }
