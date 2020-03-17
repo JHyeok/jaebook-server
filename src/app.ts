@@ -2,13 +2,13 @@ import "reflect-metadata";
 import express from "express";
 import bodyParser from "body-parser";
 import { createDatabaseConnection } from "./database";
-import { env } from "./env";
 import { Container } from "typedi";
 import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
 import { routingControllerOptions } from "./utils/RoutingConfig";
 import { useSwagger } from "./utils/Swagger";
 import morgan from "morgan";
 import { logger, stream } from "./utils/Logger";
+import { useSentry } from "./utils/Sentry";
 
 export class App {
     public app: express.Application;
@@ -33,13 +33,12 @@ export class App {
         this.app.use(morgan("combined", { stream }));
     }
 
-    public async createExpressServer() {
+    public async createExpressServer(port: number) {
         try {
-            const port: number = env.app.port;
-
             routingUseContainer(Container);
             useExpressServer(this.app, routingControllerOptions);
             useSwagger(this.app);
+            useSentry(this.app);
 
             this.app.listen(port, () => {
                 logger.info(`Server is running on http://localhost:${port}`);
