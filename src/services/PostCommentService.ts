@@ -30,8 +30,7 @@ export class PostCommentService {
 
         if (postCommentToUpdate?.userId === userId) {
             postCommentToUpdate.text = text;
-            this.postCommentRepository.save(postCommentToUpdate);
-            return postCommentToUpdate;
+            return await this.postCommentRepository.save(postCommentToUpdate);
         }
 
         return null;

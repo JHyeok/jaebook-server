@@ -11,7 +11,7 @@ export class PostCommentRepository extends Repository<PostComment> {
 
     public async getCommentsByPostId(postId: string) {
         return this.createQueryBuilder("comment")
-            .select(["comment.id", "comment.text", "comment.createdAt"])
+            .select(["comment.id", "comment.text", "comment.createdAt", "comment.postId"])
             .leftJoinAndSelect("comment.user", "user")
             .orderBy("comment.createdAt", "ASC")
             .where("comment.postId = :postId", { postId })
