@@ -41,7 +41,7 @@ describe("PostService", () => {
     let newPostId: string;
 
     it("포스트를 생성한다", async () => {
-        const newPost = await postService.createPost(request as any);
+        const newPost = await postService.createPost(request as Post, request.user.id);
         newPostId = newPost.id;
         expect(newPost.title).toBe(request.title);
         expect(newPost.content).toBe(request.content);
