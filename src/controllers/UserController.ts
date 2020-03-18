@@ -13,6 +13,11 @@ export class UserController {
         summary: "사용자 정보",
         description: "UserId로 사용자 정보를 반환한다",
         statusCode: "200",
+        responses: {
+            "400": {
+                description: "Bad request",
+            },
+        },
     })
     public async getOne(@Param("id") id: string, @Res() res: Response) {
         const user = await this.userService.getUsersById(id);

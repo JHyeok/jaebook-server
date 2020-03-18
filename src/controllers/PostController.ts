@@ -32,15 +32,9 @@ export class PostController {
     @UseBefore(checkAccessToken)
     public async create(@Body() post: PostEntity, @Res() res: Response): Promise<PostEntity> {
         const { userId } = res.locals.jwtPayload;
-        const user = await this.userService.getUsersById(userId);
-        const { title, content } = post;
+        const newPost = await this.postService.createPost(post, userId);
 
-        return this.postService.createPost({
-            title,
-            content,
-            previewContent: content.substring(0, 100),
-            user: user,
-        });
+        return newPost;
     }
 
     @HttpCode(200)
@@ -48,9 +42,23 @@ export class PostController {
     @OpenAPI({
         summary: "Post 목록 조회",
         statusCode: "200",
+        responses: {
+            "204": {
+                description: "No Content",
+            },
+        },
     })
-    public getAll(@QueryParam("offset") offset: number, @QueryParam("limit") limit: number): Promise<PostEntity[]> {
-        const posts = this.postService.getPosts(offset, limit);
+    public async getAll(
+        @QueryParam("offset") offset: number,
+        @QueryParam("limit") limit: number,
+        @Res() res: Response,
+    ) {
+        const posts = await this.postService.getPosts(offset, limit);
+
+        if (posts.length === 0) {
+            return res.status(204).send(posts);
+        }
+
         return posts;
     }
 
@@ -59,14 +67,19 @@ export class PostController {
     @OpenAPI({
         summary: "Post 조회",
         statusCode: "200",
+        responses: {
+            "400": {
+                description: "Bad request",
+            },
+        },
     })
-    public async getOne(@Param("id") id: string): Promise<PostEntity> {
+    public async getOne(@Param("id") id: string, @Res() res: Response) {
         const post = await this.postService.getPostById(id);
 
-        if (post === undefined) {
-            return post;
-        } else {
+        if (post) {
             await this.postService.incrementPostView(post);
+        } else {
+            return res.status(400).send({ message: "일치하는 Post가 없습니다." });
         }
 
         return post;
@@ -77,13 +90,23 @@ export class PostController {
     @OpenAPI({
         summary: "Post 수정",
         statusCode: "200",
+        responses: {
+            "403": {
+                description: "Forbidden",
+            },
+        },
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public update(@Param("id") id: string, @Body() post: PostEntity, @Res() res: Response): Promise<PostEntity> {
+    public async update(@Param("id") id: string, @Body() post: PostEntity, @Res() res: Response) {
         const { userId } = res.locals.jwtPayload;
+        const updatedPost = await this.postService.updatePost(id, post, userId);
 
-        return this.postService.updatePost(id, post, userId);
+        if (!updatedPost) {
+            return res.status(403).send({ message: "Post를 수정할 권한이 없습니다." });
+        }
+
+        return updatedPost;
     }
 
     @HttpCode(200)
@@ -91,6 +114,11 @@ export class PostController {
     @OpenAPI({
         summary: "Post 삭제",
         statusCode: "200",
+        responses: {
+            "403": {
+                description: "Forbidden",
+            },
+        },
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
@@ -98,6 +126,10 @@ export class PostController {
         const { userId } = res.locals.jwtPayload;
 
         const result = await this.postService.deletePost(id, userId);
+
+        if (!result) {
+            return res.status(403).send({ message: "Post를 삭제할 권한이 없습니다." });
+        }
 
         return {
             postId: id,

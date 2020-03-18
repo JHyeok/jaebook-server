@@ -17,6 +17,9 @@ export class Post {
     @PrimaryGeneratedColumn("uuid")
     public id: string;
 
+    @Column({ name: "user_id", length: 36 })
+    public userId: string;
+
     @ManyToOne(
         type => User,
         user => user.id,

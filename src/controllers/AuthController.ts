@@ -20,6 +20,11 @@ export class AuthController {
     @OpenAPI({
         summary: "사용자 로그인",
         statusCode: "200",
+        responses: {
+            "401": {
+                description: "Unauthorized",
+            },
+        },
     })
     public async login(
         @BodyParam("email") email: string,
@@ -83,6 +88,11 @@ export class AuthController {
         summary: "토큰 재발급",
         description: "RefreshToken을 이용해서 AccessToken을 재발급(새로고침)",
         statusCode: "200",
+        responses: {
+            "401": {
+                description: "Unauthorized",
+            },
+        },
     })
     @UseBefore(checkRefreshToken)
     public async refreshToken(@Res() res: Response) {

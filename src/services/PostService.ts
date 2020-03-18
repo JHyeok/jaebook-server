@@ -7,8 +7,11 @@ import { PostRepository } from "../repositories/PostRepository";
 export class PostService {
     constructor(@InjectRepository() private postRepository: PostRepository) {}
 
-    public createPost(post: Partial<Post>): Promise<Post> {
-        const newPost = this.postRepository.save(post);
+    public async createPost(post: Post, userId: string): Promise<Post> {
+        post.userId = userId;
+        post.previewContent = post.content.substring(0, 100);
+        const newPost = await this.postRepository.save(post);
+
         return newPost;
     }
 
@@ -36,8 +39,7 @@ export class PostService {
             postToUpdate.title = post.title;
             postToUpdate.content = post.content;
             postToUpdate.previewContent = post.content.substring(0, 100);
-            this.postRepository.save(postToUpdate);
-            return postToUpdate;
+            return await this.postRepository.save(postToUpdate);
         } else {
             return null;
         }
