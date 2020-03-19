@@ -2,13 +2,16 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { User } from "../entities/User";
 import { UserRepository } from "../repositories/UserRepository";
+import { CreateUserDto } from "../dtos/UserDto";
 
 @Service()
 export class UserService {
     constructor(@InjectRepository() private userRepository: UserRepository) {}
 
-    public createUser(user: User): Promise<User> {
-        const newUser = this.userRepository.save(user);
+    public async createUser(createUserDto: CreateUserDto): Promise<User> {
+        const user = createUserDto.toEntity();
+        const newUser = await this.userRepository.save(user);
+
         return newUser;
     }
 

@@ -2,21 +2,22 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { User } from "../entities/User";
 import { UserRepository } from "../repositories/UserRepository";
+import { LoginUserDto } from "../dtos/UserDto";
 
 @Service()
 export class AuthService {
     constructor(@InjectRepository() private userRepository: UserRepository) {}
 
-    public async validateUser(email: string, password: string): Promise<User> {
+    public async validateUser(loginUserDto: LoginUserDto): Promise<User> {
         const user = await this.userRepository.findOne({
             select: ["id", "realName", "email", "password"],
             where: {
-                email,
+                email: loginUserDto.email,
             },
         });
 
         if (user) {
-            const isPasswordMatch = await user.comparePassword(password);
+            const isPasswordMatch = await user.comparePassword(loginUserDto.password);
 
             if (isPasswordMatch) {
                 return user;

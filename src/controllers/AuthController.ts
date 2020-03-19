@@ -1,5 +1,5 @@
 import { AuthService } from "../services/AuthService";
-import { JsonController, Post, BodyParam, UseBefore, Get, Res, Body, HttpCode } from "routing-controllers";
+import { JsonController, Post, UseBefore, Get, Res, Body, HttpCode } from "routing-controllers";
 import {
     checkAccessToken,
     checkRefreshToken,
@@ -8,8 +8,8 @@ import {
 } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
 import { UserService } from "../services/UserService";
-import { User } from "../entities/User";
 import { OpenAPI } from "routing-controllers-openapi";
+import { CreateUserDto, LoginUserDto, ResponseUserDto } from "../dtos/UserDto";
 
 @JsonController("/auth")
 export class AuthController {
@@ -26,12 +26,8 @@ export class AuthController {
             },
         },
     })
-    public async login(
-        @BodyParam("email") email: string,
-        @BodyParam("password") password: string,
-        @Res() res: Response,
-    ) {
-        const user = await this.authService.validateUser(email, password);
+    public async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
+        const user = await this.authService.validateUser(loginUserDto);
 
         if (!user) {
             return res.status(401).send({ message: "유효하지 않은 사용자 이메일/비밀번호 입니다." });
@@ -53,8 +49,8 @@ export class AuthController {
         summary: "사용자 회원가입",
         statusCode: "200",
     })
-    public async register(@Body() user: User) {
-        const isDuplicateUser = await this.userService.isDuplicateUser(user.email);
+    public async register(@Body() createUserDto: CreateUserDto) {
+        const isDuplicateUser = await this.userService.isDuplicateUser(createUserDto.email);
 
         if (isDuplicateUser) {
             return {
@@ -63,20 +59,20 @@ export class AuthController {
             };
         }
 
-        const newUser = await this.userService.createUser(user);
+        const newUser = await this.userService.createUser(createUserDto);
 
         const accessToken = generateAccessToken(newUser);
         const refreshToken = generateRefreshToken(newUser);
         await this.authService.saveRefreshToken(newUser, refreshToken);
 
-        const userInfo = {
+        const user: ResponseUserDto = {
             id: newUser.id,
             realName: newUser.realName,
             email: newUser.email,
         };
 
         return {
-            user: userInfo,
+            user,
             accessToken: accessToken,
             refreshToken: refreshToken,
         };
@@ -93,6 +89,7 @@ export class AuthController {
                 description: "Unauthorized",
             },
         },
+        security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkRefreshToken)
     public async refreshToken(@Res() res: Response) {
@@ -125,7 +122,7 @@ export class AuthController {
     public auth(@Res() res: Response) {
         const { userId, userName, userEmail } = res.locals.jwtPayload;
 
-        const user = {
+        const user: ResponseUserDto = {
             id: userId,
             realName: userName,
             email: userEmail,

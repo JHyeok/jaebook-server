@@ -4,6 +4,7 @@ import { AuthService } from "../../../src/services/AuthService";
 import { UserRepository } from "../../../src/repositories/UserRepository";
 import { User } from "../../../src/entities/User";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
+import { LoginUserDto } from "../../../src/dtos/UserDto";
 
 describe("AuthService", () => {
     let db: Connection;
@@ -28,8 +29,12 @@ describe("AuthService", () => {
             "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOiJjOGM5ODhiOS1hZTNhLTRmNjgtOTVkZi0zNWNjM2JjZDRhNWUiLCJpYXQiOjE1ODMxMTU4OTYsImV4cCI6MTU4NDMyNTQ5Nn0.w9Yze38ys8OIGmde7HEH2Gj_xZe0uIy7Di4Od5zzSP4",
     };
 
+    const loginUserDto = new LoginUserDto();
+    loginUserDto.email = request.email;
+    loginUserDto.password = request.password;
+
     it("이메일과 비밀번호가 일치하면 유저 정보를 반환한다", async () => {
-        const user = await authService.validateUser(request.email, request.password);
+        const user = await authService.validateUser(loginUserDto);
         expect(user).toBeInstanceOf(User);
         expect(user.id).toBe(request.id);
         expect(user.realName).toBe(request.realName);
@@ -37,7 +42,8 @@ describe("AuthService", () => {
     });
 
     it("이메일과 비밀번호가 일치하지 않으면 undefined를 반환한다", async () => {
-        const user = await authService.validateUser(request.email, "notpassword");
+        loginUserDto.password = "notPassword";
+        const user = await authService.validateUser(loginUserDto);
         expect(user).toBeUndefined();
     });
 
