@@ -48,7 +48,10 @@ describe("AuthService", () => {
     });
 
     it("유저Id와 토큰이 일치하면 유저 정보를 반환한다", async () => {
-        const user = await authService.validateUserToken(request.id, request.refreshToken);
+        const user = await authService.validateUserToken(
+            request.id,
+            request.refreshToken,
+        );
         expect(user).toBeInstanceOf(User);
         expect(user.id).toBe(request.id);
         expect(user.realName).toBe(request.realName);
@@ -56,7 +59,10 @@ describe("AuthService", () => {
     });
 
     it("유저Id와 토큰이 일치하지 않으면 undefined를 반환한다", async () => {
-        const user = await authService.validateUserToken(request.id, "not token");
+        const user = await authService.validateUserToken(
+            request.id,
+            "not token",
+        );
         expect(user).toBeUndefined();
     });
 });

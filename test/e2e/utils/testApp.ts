@@ -2,7 +2,10 @@ import "reflect-metadata";
 import express from "express";
 import bodyParser from "body-parser";
 import { Container } from "typedi";
-import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
+import {
+    useContainer as routingUseContainer,
+    useExpressServer,
+} from "routing-controllers";
 
 routingUseContainer(Container);
 const app = express();

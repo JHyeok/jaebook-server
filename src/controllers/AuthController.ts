@@ -1,5 +1,13 @@
 import { AuthService } from "../services/AuthService";
-import { JsonController, Post, UseBefore, Get, Res, Body, HttpCode } from "routing-controllers";
+import {
+    JsonController,
+    Post,
+    UseBefore,
+    Get,
+    Res,
+    Body,
+    HttpCode,
+} from "routing-controllers";
 import {
     checkAccessToken,
     checkRefreshToken,
@@ -13,7 +21,10 @@ import { CreateUserDto, LoginUserDto, ResponseUserDto } from "../dtos/UserDto";
 
 @JsonController("/auth")
 export class AuthController {
-    constructor(private authService: AuthService, private userService: UserService) {}
+    constructor(
+        private authService: AuthService,
+        private userService: UserService,
+    ) {}
 
     @HttpCode(200)
     @Post("/login")
@@ -26,11 +37,16 @@ export class AuthController {
             },
         },
     })
-    public async login(@Body() loginUserDto: LoginUserDto, @Res() res: Response) {
+    public async login(
+        @Body() loginUserDto: LoginUserDto,
+        @Res() res: Response,
+    ) {
         const user = await this.authService.validateUser(loginUserDto);
 
         if (!user) {
-            return res.status(401).send({ message: "유효하지 않은 사용자 이메일/비밀번호 입니다." });
+            return res.status(401).send({
+                message: "유효하지 않은 사용자 이메일/비밀번호 입니다.",
+            });
         }
 
         const accessToken = generateAccessToken(user);
@@ -50,7 +66,9 @@ export class AuthController {
         statusCode: "200",
     })
     public async register(@Body() createUserDto: CreateUserDto) {
-        const isDuplicateUser = await this.userService.isDuplicateUser(createUserDto.email);
+        const isDuplicateUser = await this.userService.isDuplicateUser(
+            createUserDto.email,
+        );
 
         if (isDuplicateUser) {
             return {
@@ -96,10 +114,15 @@ export class AuthController {
         const userId = res.locals.jwtPayload.userId;
         const refreshToken = res.locals.token;
 
-        const user = await this.authService.validateUserToken(userId, refreshToken);
+        const user = await this.authService.validateUserToken(
+            userId,
+            refreshToken,
+        );
 
         if (!user) {
-            return res.status(401).send({ message: "유저 정보와 RefreshToken이 일치하지 않습니다." });
+            return res.status(401).send({
+                message: "유저 정보와 RefreshToken이 일치하지 않습니다.",
+            });
         }
 
         const accessToken = generateAccessToken(user);
@@ -114,7 +137,8 @@ export class AuthController {
     @Get("/user")
     @OpenAPI({
         summary: "사용자 정보",
-        description: "AccessToken으로 사용자 정보를 반환한다(Front에서 Token 인증 용도로 사용한다)",
+        description:
+            "AccessToken으로 사용자 정보를 반환한다(Front에서 Token 인증 용도로 사용한다)",
         statusCode: "200",
         security: [{ bearerAuth: [] }],
     })

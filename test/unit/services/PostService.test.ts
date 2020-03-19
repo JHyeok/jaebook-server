@@ -47,7 +47,10 @@ describe("PostService", () => {
     let newPostId: string;
 
     it("포스트를 생성한다", async () => {
-        const newPost = await postService.createPost(createPostDto, request.user.id);
+        const newPost = await postService.createPost(
+            createPostDto,
+            request.user.id,
+        );
         newPostId = newPost.id;
         expect(newPost.title).toBe(request.title);
         expect(newPost.content).toBe(request.content);
@@ -79,14 +82,22 @@ describe("PostService", () => {
     });
 
     it("포스트를 수정한다", async () => {
-        const post = await postService.updatePost(newPostId, updatePostDto, request.user.id);
+        const post = await postService.updatePost(
+            newPostId,
+            updatePostDto,
+            request.user.id,
+        );
         expect(post).toBeInstanceOf(Post);
         expect(post.title).toBe(request.updateTitle);
         expect(post.content).toBe(request.updateContent);
     });
 
     it("권한이 없는 사람이 포스트 수정에 실패한다", async () => {
-        const post = await postService.updatePost(newPostId, updatePostDto, "notUserId");
+        const post = await postService.updatePost(
+            newPostId,
+            updatePostDto,
+            "notUserId",
+        );
         expect(post).toBeNull();
     });
 

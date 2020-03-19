@@ -8,7 +8,10 @@ import { User } from "../entities/User";
  * @param req
  */
 const extractAccessToken = (req: Request) => {
-    if (req.headers.authorization && req.headers.authorization.split(" ")[0] === "Bearer") {
+    if (
+        req.headers.authorization &&
+        req.headers.authorization.split(" ")[0] === "Bearer"
+    ) {
         return req.headers.authorization.split(" ")[1];
     }
 };
@@ -29,7 +32,11 @@ const extractRefreshToken = (req: Request) => {
  * @param res
  * @param next
  */
-export const checkAccessToken = (req: Request, res: Response, next: NextFunction) => {
+export const checkAccessToken = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     const token = extractAccessToken(req);
     let jwtPayload;
 
@@ -37,7 +44,9 @@ export const checkAccessToken = (req: Request, res: Response, next: NextFunction
         jwtPayload = jwt.verify(token, env.app.jwtAccessSecret);
         res.locals.jwtPayload = jwtPayload;
     } catch (error) {
-        return res.status(401).send({ message: "Invalid or Missing JWT token" });
+        return res
+            .status(401)
+            .send({ message: "Invalid or Missing JWT token" });
     }
 
     next();
@@ -49,7 +58,11 @@ export const checkAccessToken = (req: Request, res: Response, next: NextFunction
  * @param res
  * @param next
  */
-export const checkRefreshToken = (req: Request, res: Response, next: NextFunction) => {
+export const checkRefreshToken = (
+    req: Request,
+    res: Response,
+    next: NextFunction,
+) => {
     const token = extractRefreshToken(req);
     let jwtPayload;
 
@@ -58,7 +71,9 @@ export const checkRefreshToken = (req: Request, res: Response, next: NextFunctio
         res.locals.jwtPayload = jwtPayload;
         res.locals.token = token;
     } catch (error) {
-        return res.status(401).send({ message: "Invalid or Missing JWT token" });
+        return res
+            .status(401)
+            .send({ message: "Invalid or Missing JWT token" });
     }
 
     next();
@@ -69,9 +84,13 @@ export const checkRefreshToken = (req: Request, res: Response, next: NextFunctio
  * @param user
  */
 export const generateAccessToken = (user: User) => {
-    return jwt.sign({ userId: user.id, userName: user.realName, userEmail: user.email }, env.app.jwtAccessSecret, {
-        expiresIn: "30m",
-    });
+    return jwt.sign(
+        { userId: user.id, userName: user.realName, userEmail: user.email },
+        env.app.jwtAccessSecret,
+        {
+            expiresIn: "30m",
+        },
+    );
 };
 
 /**
@@ -79,5 +98,7 @@ export const generateAccessToken = (user: User) => {
  * @param user
  */
 export const generateRefreshToken = (user: User) => {
-    return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, { expiresIn: "14d" });
+    return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, {
+        expiresIn: "14d",
+    });
 };

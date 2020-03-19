@@ -23,7 +23,9 @@ export class UserController {
         const user = await this.userService.getUsersById(id);
 
         if (!user) {
-            return res.status(400).send({ message: "일치하는 사용자가 없습니다." });
+            return res
+                .status(400)
+                .send({ message: "일치하는 사용자가 없습니다." });
         }
 
         return user;

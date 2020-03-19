@@ -21,7 +21,10 @@ describe("PostLikeService", () => {
         postRepository = db.getCustomRepository(PostRepository);
         await postRepository.save(PostSeed);
         postLikeRepository = db.getCustomRepository(PostLikeRepository);
-        postLikeService = new PostLikeService(postRepository, postLikeRepository);
+        postLikeService = new PostLikeService(
+            postRepository,
+            postLikeRepository,
+        );
     });
 
     afterAll(() => db.close());
@@ -32,32 +35,50 @@ describe("PostLikeService", () => {
     };
 
     it("포스트가 좋아요가 눌러졌는지 체크하고 false를 반환한다", async () => {
-        const result = await postLikeService.isPostLike(request.postId, request.userId);
+        const result = await postLikeService.isPostLike(
+            request.postId,
+            request.userId,
+        );
         expect(result).toBeFalsy();
     });
 
     it("포스트에 좋아요를 누르고 좋아요가 1이 된다", async () => {
-        const result = await postLikeService.likePost(request.postId, request.userId);
+        const result = await postLikeService.likePost(
+            request.postId,
+            request.userId,
+        );
         expect(result.like).toBe(1);
     });
 
     it("포스트에 좋아요를 누르는데 중복되었기 때문에 그대로 좋아요는 1이 된다", async () => {
-        const result = await postLikeService.likePost(request.postId, request.userId);
+        const result = await postLikeService.likePost(
+            request.postId,
+            request.userId,
+        );
         expect(result.like).toBe(1);
     });
 
     it("포스트가 좋아요가 눌러졌는지 체크하고 true를 반환한다", async () => {
-        const result = await postLikeService.isPostLike(request.postId, request.userId);
+        const result = await postLikeService.isPostLike(
+            request.postId,
+            request.userId,
+        );
         expect(result).toBeTruthy();
     });
 
     it("포스트에 좋아요를 취소하고 좋아요가 0이 된다", async () => {
-        const result = await postLikeService.unlikePost(request.postId, request.userId);
+        const result = await postLikeService.unlikePost(
+            request.postId,
+            request.userId,
+        );
         expect(result.like).toBe(0);
     });
 
     it("포스트에 좋아요를 취소하는데 중복되었기 때문에 그대로 좋아요는 0이 된다", async () => {
-        const result = await postLikeService.unlikePost(request.postId, request.userId);
+        const result = await postLikeService.unlikePost(
+            request.postId,
+            request.userId,
+        );
         expect(result.like).toBe(0);
     });
 });

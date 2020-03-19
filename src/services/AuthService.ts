@@ -17,7 +17,9 @@ export class AuthService {
         });
 
         if (user) {
-            const isPasswordMatch = await user.comparePassword(loginUserDto.password);
+            const isPasswordMatch = await user.comparePassword(
+                loginUserDto.password,
+            );
 
             if (isPasswordMatch) {
                 return user;
@@ -27,7 +29,10 @@ export class AuthService {
         return undefined;
     }
 
-    public async validateUserToken(userId: string, refreshToekn: string): Promise<User> {
+    public async validateUserToken(
+        userId: string,
+        refreshToekn: string,
+    ): Promise<User> {
         const user = await this.userRepository.findOne({
             select: ["id", "realName", "email"],
             where: {

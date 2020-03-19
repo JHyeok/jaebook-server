@@ -1,14 +1,31 @@
 import { PostService } from "../services/PostService";
 import { PostCommentService } from "../services/PostCommentService";
-import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, Delete, HttpCode } from "routing-controllers";
+import {
+    JsonController,
+    Get,
+    Param,
+    Body,
+    Post,
+    Put,
+    UseBefore,
+    Res,
+    Delete,
+    HttpCode,
+} from "routing-controllers";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
 import { OpenAPI } from "routing-controllers-openapi";
-import { CreatePostCommentDto, UpdatePostCommentDto } from "../dtos/PostCommentDto";
+import {
+    CreatePostCommentDto,
+    UpdatePostCommentDto,
+} from "../dtos/PostCommentDto";
 
 @JsonController("/posts")
 export class PostCommentController {
-    constructor(private postService: PostService, private postCommentService: PostCommentService) {}
+    constructor(
+        private postService: PostService,
+        private postCommentService: PostCommentService,
+    ) {}
 
     @HttpCode(201)
     @Post("/:postId/comments")
@@ -33,9 +50,15 @@ export class PostCommentController {
         const isPost = await this.postService.isPostById(postId);
 
         if (isPost) {
-            return await this.postCommentService.createPostComment(postId, createPostCommentDto, userId);
+            return await this.postCommentService.createPostComment(
+                postId,
+                createPostCommentDto,
+                userId,
+            );
         } else {
-            return res.status(400).send({ message: "일치하는 Post가 없습니다." });
+            return res
+                .status(400)
+                .send({ message: "일치하는 Post가 없습니다." });
         }
     }
 
@@ -56,7 +79,9 @@ export class PostCommentController {
         if (isPost) {
             return this.postCommentService.getCommentByPostId(postId);
         } else {
-            return res.status(400).send({ message: "일치하는 Post가 없습니다." });
+            return res
+                .status(400)
+                .send({ message: "일치하는 Post가 없습니다." });
         }
     }
 
@@ -88,7 +113,9 @@ export class PostCommentController {
         );
 
         if (!updatedPostComment) {
-            return res.status(403).send({ message: "Post 댓글을 수정할 권한이 없습니다." });
+            return res
+                .status(403)
+                .send({ message: "Post 댓글을 수정할 권한이 없습니다." });
         }
 
         return updatedPostComment;
@@ -107,13 +134,23 @@ export class PostCommentController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async delete(@Param("postId") postId: string, @Param("id") commentId: string, @Res() res: Response) {
+    public async delete(
+        @Param("postId") postId: string,
+        @Param("id") commentId: string,
+        @Res() res: Response,
+    ) {
         const { userId } = res.locals.jwtPayload;
 
-        const result = await this.postCommentService.deletePostComment(postId, commentId, userId);
+        const result = await this.postCommentService.deletePostComment(
+            postId,
+            commentId,
+            userId,
+        );
 
         if (!result) {
-            return res.status(403).send({ message: "Post 댓글을 삭제할 권한이 없습니다." });
+            return res
+                .status(403)
+                .send({ message: "Post 댓글을 삭제할 권한이 없습니다." });
         }
 
         return {

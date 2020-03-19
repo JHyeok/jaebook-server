@@ -8,7 +8,10 @@ import { CreatePostDto, UpdatePostDto } from "../dtos/PostDto";
 export class PostService {
     constructor(@InjectRepository() private postRepository: PostRepository) {}
 
-    public async createPost(createPostDto: CreatePostDto, userId: string): Promise<Post> {
+    public async createPost(
+        createPostDto: CreatePostDto,
+        userId: string,
+    ): Promise<Post> {
         const post = createPostDto.toEntity();
         post.userId = userId;
         post.previewContent = post.content.substring(0, 100);
@@ -34,13 +37,20 @@ export class PostService {
         await this.postRepository.save(post);
     }
 
-    public async updatePost(postId: string, updatePostDto: UpdatePostDto, userId: string): Promise<Post> {
+    public async updatePost(
+        postId: string,
+        updatePostDto: UpdatePostDto,
+        userId: string,
+    ): Promise<Post> {
         const postToUpdate = await this.postRepository.getPostById(postId);
 
         if (postToUpdate.user.id === userId) {
             postToUpdate.title = updatePostDto.title;
             postToUpdate.content = updatePostDto.content;
-            postToUpdate.previewContent = updatePostDto.content.substring(0, 100);
+            postToUpdate.previewContent = updatePostDto.content.substring(
+                0,
+                100,
+            );
             return await this.postRepository.save(postToUpdate);
         } else {
             return null;

@@ -20,7 +20,7 @@ import { CreatePostDto, UpdatePostDto } from "../dtos/PostDto";
 
 @JsonController("/posts")
 export class PostController {
-    constructor(private userService: UserService, private postService: PostService) {}
+    constructor(private postService: PostService) {}
 
     @HttpCode(201)
     @Post()
@@ -30,9 +30,15 @@ export class PostController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async create(@Body() createPostDto: CreatePostDto, @Res() res: Response) {
+    public async create(
+        @Body() createPostDto: CreatePostDto,
+        @Res() res: Response,
+    ) {
         const { userId } = res.locals.jwtPayload;
-        const newPost = await this.postService.createPost(createPostDto, userId);
+        const newPost = await this.postService.createPost(
+            createPostDto,
+            userId,
+        );
 
         return newPost;
     }
@@ -79,7 +85,9 @@ export class PostController {
         if (post) {
             await this.postService.incrementPostView(post);
         } else {
-            return res.status(400).send({ message: "일치하는 Post가 없습니다." });
+            return res
+                .status(400)
+                .send({ message: "일치하는 Post가 없습니다." });
         }
 
         return post;
@@ -98,12 +106,22 @@ export class PostController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async update(@Param("id") id: string, @Body() updatePostDto: UpdatePostDto, @Res() res: Response) {
+    public async update(
+        @Param("id") id: string,
+        @Body() updatePostDto: UpdatePostDto,
+        @Res() res: Response,
+    ) {
         const { userId } = res.locals.jwtPayload;
-        const updatedPost = await this.postService.updatePost(id, updatePostDto, userId);
+        const updatedPost = await this.postService.updatePost(
+            id,
+            updatePostDto,
+            userId,
+        );
 
         if (!updatedPost) {
-            return res.status(403).send({ message: "Post를 수정할 권한이 없습니다." });
+            return res
+                .status(403)
+                .send({ message: "Post를 수정할 권한이 없습니다." });
         }
 
         return updatedPost;
@@ -128,7 +146,9 @@ export class PostController {
         const result = await this.postService.deletePost(id, userId);
 
         if (!result) {
-            return res.status(403).send({ message: "Post를 삭제할 권한이 없습니다." });
+            return res
+                .status(403)
+                .send({ message: "Post를 삭제할 권한이 없습니다." });
         }
 
         return {

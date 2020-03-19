@@ -5,13 +5,18 @@ import { Connection } from "typeorm";
 import { createMemoryDatabase } from "../../utils/CreateMemoryDatabase";
 import { UserRepository } from "../../../src/repositories/UserRepository";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
-import { generateAccessToken, generateRefreshToken } from "../../../src/middlewares/AuthMiddleware";
+import {
+    generateAccessToken,
+    generateRefreshToken,
+} from "../../../src/middlewares/AuthMiddleware";
 
 let db: Connection;
 let userRepository: UserRepository;
 let testRefreshToken: string;
 
-const setHeader = (token: string): { Authorization: string; Accept: string } => ({
+const setHeader = (
+    token: string,
+): { Authorization: string; Accept: string } => ({
     Authorization: `Bearer ${token}`,
     Accept: "application/json",
 });

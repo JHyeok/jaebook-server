@@ -6,7 +6,10 @@ import { PostCommentRepository } from "../../../src/repositories/PostCommentRepo
 import { PostCommentService } from "../../../src/services/PostCommentService";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
 import { PostSeed } from "../../utils/seeds/PostTestSeed";
-import { UpdatePostCommentDto, CreatePostCommentDto } from "../../../src/dtos/PostCommentDto";
+import {
+    UpdatePostCommentDto,
+    CreatePostCommentDto,
+} from "../../../src/dtos/PostCommentDto";
 
 describe("PostCommentService", () => {
     let db: Connection;
@@ -55,7 +58,9 @@ describe("PostCommentService", () => {
     });
 
     it("포스트Id가 일치하는 포스트 댓글 목록을 반환한다", async () => {
-        const postComments = await postCommentService.getCommentByPostId(request.postId);
+        const postComments = await postCommentService.getCommentByPostId(
+            request.postId,
+        );
         expect(postComments[0].text).toBe(request.text);
         expect(postComments[0].user.id).toBe(request.userId);
     });
@@ -83,12 +88,20 @@ describe("PostCommentService", () => {
     });
 
     it("권한이 없는 사람이 포스트 댓글 삭제에 실패한다", async () => {
-        const result = await postCommentService.deletePostComment(request.postId, postCommentId, "notUserId");
+        const result = await postCommentService.deletePostComment(
+            request.postId,
+            postCommentId,
+            "notUserId",
+        );
         expect(result).toBeFalsy();
     });
 
     it("권한이 있는 사람이 포스트 댓글 삭제에 성공한다", async () => {
-        const result = await postCommentService.deletePostComment(request.postId, postCommentId, request.userId);
+        const result = await postCommentService.deletePostComment(
+            request.postId,
+            postCommentId,
+            request.userId,
+        );
         expect(result).toBeTruthy();
     });
 });

@@ -46,12 +46,16 @@ describe("UserService", () => {
     });
 
     it("이미 등록된 이메일의 중복 여부를 검사하면 true를 반환한다", async () => {
-        const isDuplicateUser = await userService.isDuplicateUser(request.email);
+        const isDuplicateUser = await userService.isDuplicateUser(
+            request.email,
+        );
         expect(isDuplicateUser).toBeTruthy();
     });
 
     it("등록되지 않은 이메일의 중복 여부를 검사하면 false를 반환한다", async () => {
-        const isUnDuplicateUser = await userService.isDuplicateUser("null@gmail.com");
+        const isUnDuplicateUser = await userService.isDuplicateUser(
+            "null@gmail.com",
+        );
         expect(isUnDuplicateUser).toBeFalsy();
     });
 });

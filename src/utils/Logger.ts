@@ -1,9 +1,23 @@
 import { join } from "path";
 import { existsSync, mkdirSync } from "fs";
-import { Logger, createLogger, LoggerOptions, format, transports } from "winston";
+import {
+    Logger,
+    createLogger,
+    LoggerOptions,
+    format,
+    transports,
+} from "winston";
 import DailyRotateFile = require("winston-daily-rotate-file");
 
-const { combine, timestamp, printf, prettyPrint, colorize, json, errors } = format;
+const {
+    combine,
+    timestamp,
+    printf,
+    prettyPrint,
+    colorize,
+    json,
+    errors,
+} = format;
 
 const logDirectory = "logs";
 const filename = join(logDirectory, "app-%DATE%.log");
@@ -37,7 +51,10 @@ const fileOutputFormat = combine(
 const options: LoggerOptions = {
     level,
     exitOnError: false,
-    format: combine(timestamp({ format: "YYYY-MM-DD HH:mm:ss" }), errors({ stack: true })),
+    format: combine(
+        timestamp({ format: "YYYY-MM-DD HH:mm:ss" }),
+        errors({ stack: true }),
+    ),
     transports: [
         // 콘솔 로그 출력
         new transports.Console({

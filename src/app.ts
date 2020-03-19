@@ -3,7 +3,10 @@ import express from "express";
 import bodyParser from "body-parser";
 import { createDatabaseConnection } from "./database";
 import { Container } from "typedi";
-import { useContainer as routingUseContainer, useExpressServer } from "routing-controllers";
+import {
+    useContainer as routingUseContainer,
+    useExpressServer,
+} from "routing-controllers";
 import { routingControllerOptions } from "./utils/RoutingConfig";
 import { useSwagger } from "./utils/Swagger";
 import morgan from "morgan";

@@ -2,11 +2,17 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { PostComment } from "../entities/PostComment";
 import { PostCommentRepository } from "../repositories/PostCommentRepository";
-import { CreatePostCommentDto, UpdatePostCommentDto } from "../dtos/PostCommentDto";
+import {
+    CreatePostCommentDto,
+    UpdatePostCommentDto,
+} from "../dtos/PostCommentDto";
 
 @Service()
 export class PostCommentService {
-    constructor(@InjectRepository() private postCommentRepository: PostCommentRepository) {}
+    constructor(
+        @InjectRepository()
+        private postCommentRepository: PostCommentRepository,
+    ) {}
 
     public async createPostComment(
         postId: string,
@@ -30,7 +36,10 @@ export class PostCommentService {
         updatePostCommentDto: UpdatePostCommentDto,
         userId: string,
     ): Promise<PostComment> {
-        const postCommentToUpdate = await this.postCommentRepository.getCommentById(postId, commentId);
+        const postCommentToUpdate = await this.postCommentRepository.getCommentById(
+            postId,
+            commentId,
+        );
 
         if (postCommentToUpdate?.userId === userId) {
             postCommentToUpdate.text = updatePostCommentDto.text;
@@ -40,8 +49,15 @@ export class PostCommentService {
         return null;
     }
 
-    public async deletePostComment(postId: string, commentId: string, userId: string): Promise<boolean> {
-        const postCommentToDelete = await this.postCommentRepository.getCommentById(postId, commentId);
+    public async deletePostComment(
+        postId: string,
+        commentId: string,
+        userId: string,
+    ): Promise<boolean> {
+        const postCommentToDelete = await this.postCommentRepository.getCommentById(
+            postId,
+            commentId,
+        );
 
         if (postCommentToDelete?.userId === userId) {
             await this.postCommentRepository.delete({ id: commentId });

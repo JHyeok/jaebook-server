@@ -13,7 +13,9 @@ let userRepository: UserRepository;
 let postRepository: PostRepository;
 let testPostCommentId: string;
 
-const setHeader = (token: string): { Authorization: string; Accept: string } => ({
+const setHeader = (
+    token: string,
+): { Authorization: string; Accept: string } => ({
     Authorization: `Bearer ${token}`,
     Accept: "application/json",
 });
@@ -308,7 +310,9 @@ describe("DELETE /api/posts/:postId/comments/:id", () => {
             email: "hellojest2@gmail.com",
         } as any);
         await request(app)
-            .delete(`/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}`)
+            .delete(
+                `/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}`,
+            )
             .set(setHeader(token))
             .expect(403);
     });
@@ -316,7 +320,9 @@ describe("DELETE /api/posts/:postId/comments/:id", () => {
     it("200: Post 댓글 삭제에 성공한다", async () => {
         const token = generateAccessToken(user as any);
         const response = await request(app)
-            .delete(`/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}`)
+            .delete(
+                `/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}`,
+            )
             .set(setHeader(token))
             .expect(200);
 

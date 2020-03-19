@@ -1,7 +1,9 @@
 /**
  * NODE_ENV에 따른 .env 파일 로드
  */
-require("dotenv").config({ path: `config/.env.${process.env.NODE_ENV || "development"}` });
+require("dotenv").config({
+    path: `config/.env.${process.env.NODE_ENV || "development"}`,
+});
 
 /**
  * 환경 변수

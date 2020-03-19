@@ -48,7 +48,9 @@ export class User {
         this.password = await bcrypt.hash(this.password, 10);
     }
 
-    public async comparePassword(unencryptedPassword: string): Promise<boolean> {
+    public async comparePassword(
+        unencryptedPassword: string,
+    ): Promise<boolean> {
         return await bcrypt.compare(unencryptedPassword, this.password);
     }
 }

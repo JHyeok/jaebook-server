@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from "express";
-import { Middleware, ExpressErrorMiddlewareInterface } from "routing-controllers";
+import {
+    Middleware,
+    ExpressErrorMiddlewareInterface,
+} from "routing-controllers";
 import { logger } from "../utils/Logger";
 
 @Middleware({ type: "after" })

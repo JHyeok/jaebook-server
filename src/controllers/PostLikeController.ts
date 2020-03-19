@@ -1,4 +1,13 @@
-import { JsonController, Get, Param, Post, UseBefore, Res, Delete, HttpCode } from "routing-controllers";
+import {
+    JsonController,
+    Get,
+    Param,
+    Post,
+    UseBefore,
+    Res,
+    Delete,
+    HttpCode,
+} from "routing-controllers";
 import { PostLikeService } from "../services/PostLikeService";
 import { Post as PostEntity } from "../entities/Post";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
@@ -38,7 +47,10 @@ export class PostLikeController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public like(@Param("id") id: string, @Res() res: Response): Promise<PostEntity> {
+    public like(
+        @Param("id") id: string,
+        @Res() res: Response,
+    ): Promise<PostEntity> {
         const { userId } = res.locals.jwtPayload;
 
         return this.postLikeService.likePost(id, userId);
@@ -53,7 +65,10 @@ export class PostLikeController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public unlike(@Param("id") id: string, @Res() res: Response): Promise<PostEntity> {
+    public unlike(
+        @Param("id") id: string,
+        @Res() res: Response,
+    ): Promise<PostEntity> {
         const { userId } = res.locals.jwtPayload;
 
         return this.postLikeService.unlikePost(id, userId);

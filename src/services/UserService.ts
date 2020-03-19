@@ -27,7 +27,9 @@ export class UserService {
      * @param email 이메일
      */
     public async isDuplicateUser(email: string): Promise<boolean> {
-        const user = await this.userRepository.findOne({ where: { email: email } });
+        const user = await this.userRepository.findOne({
+            where: { email: email },
+        });
 
         if (user) {
             return true;
