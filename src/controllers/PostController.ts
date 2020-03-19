@@ -13,10 +13,10 @@ import {
     Delete,
     HttpCode,
 } from "routing-controllers";
-import { Post as PostEntity } from "../entities/Post";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
 import { OpenAPI } from "routing-controllers-openapi";
+import { CreatePostDto, UpdatePostDto } from "../dtos/PostDto";
 
 @JsonController("/posts")
 export class PostController {
@@ -30,9 +30,9 @@ export class PostController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async create(@Body() post: PostEntity, @Res() res: Response): Promise<PostEntity> {
+    public async create(@Body() createPostDto: CreatePostDto, @Res() res: Response) {
         const { userId } = res.locals.jwtPayload;
-        const newPost = await this.postService.createPost(post, userId);
+        const newPost = await this.postService.createPost(createPostDto, userId);
 
         return newPost;
     }
@@ -98,9 +98,9 @@ export class PostController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async update(@Param("id") id: string, @Body() post: PostEntity, @Res() res: Response) {
+    public async update(@Param("id") id: string, @Body() updatePostDto: UpdatePostDto, @Res() res: Response) {
         const { userId } = res.locals.jwtPayload;
-        const updatedPost = await this.postService.updatePost(id, post, userId);
+        const updatedPost = await this.postService.updatePost(id, updatePostDto, userId);
 
         if (!updatedPost) {
             return res.status(403).send({ message: "Post를 수정할 권한이 없습니다." });

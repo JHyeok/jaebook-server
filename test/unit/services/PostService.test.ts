@@ -5,6 +5,7 @@ import { UserRepository } from "../../../src/repositories/UserRepository";
 import { PostService } from "../../../src/services/PostService";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
 import { Post } from "../../../src/entities/Post";
+import { CreatePostDto, UpdatePostDto } from "../../../src/dtos/PostDto";
 
 describe("PostService", () => {
     let db: Connection;
@@ -31,17 +32,22 @@ describe("PostService", () => {
             realName: "홍길동",
             email: "hellojest@gmail.com",
         },
+        updateTitle: "업데이트 제목 입니다.",
+        updateContent: "업데이트 내용 입니다.",
     };
 
-    const updateRequest = {
-        title: "업데이트 제목 입니다.",
-        content: "업데이트 내용 입니다.",
-    };
+    const createPostDto = new CreatePostDto();
+    createPostDto.title = request.title;
+    createPostDto.content = request.content;
+
+    const updatePostDto = new UpdatePostDto();
+    updatePostDto.title = request.updateTitle;
+    updatePostDto.content = request.updateContent;
 
     let newPostId: string;
 
     it("포스트를 생성한다", async () => {
-        const newPost = await postService.createPost(request as Post, request.user.id);
+        const newPost = await postService.createPost(createPostDto, request.user.id);
         newPostId = newPost.id;
         expect(newPost.title).toBe(request.title);
         expect(newPost.content).toBe(request.content);
@@ -73,14 +79,14 @@ describe("PostService", () => {
     });
 
     it("포스트를 수정한다", async () => {
-        const post = await postService.updatePost(newPostId, updateRequest, request.user.id);
+        const post = await postService.updatePost(newPostId, updatePostDto, request.user.id);
         expect(post).toBeInstanceOf(Post);
-        expect(post.title).toBe(updateRequest.title);
-        expect(post.content).toBe(updateRequest.content);
+        expect(post.title).toBe(request.updateTitle);
+        expect(post.content).toBe(request.updateContent);
     });
 
     it("권한이 없는 사람이 포스트 수정에 실패한다", async () => {
-        const post = await postService.updatePost(newPostId, updateRequest, "notUserId");
+        const post = await postService.updatePost(newPostId, updatePostDto, "notUserId");
         expect(post).toBeNull();
     });
 
