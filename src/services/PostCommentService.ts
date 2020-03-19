@@ -2,15 +2,19 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { PostComment } from "../entities/PostComment";
 import { PostCommentRepository } from "../repositories/PostCommentRepository";
+import { CreatePostCommentDto, UpdatePostCommentDto } from "../dtos/PostCommentDto";
 
 @Service()
 export class PostCommentService {
     constructor(@InjectRepository() private postCommentRepository: PostCommentRepository) {}
 
-    public async createPostComment(postId: string, text: string, userId: string): Promise<PostComment> {
-        const postComment = new PostComment();
+    public async createPostComment(
+        postId: string,
+        createPostCommentDto: CreatePostCommentDto,
+        userId: string,
+    ): Promise<PostComment> {
+        const postComment = createPostCommentDto.toEntity();
         postComment.postId = postId;
-        postComment.text = text;
         postComment.userId = userId;
 
         return await this.postCommentRepository.save(postComment);
@@ -23,13 +27,13 @@ export class PostCommentService {
     public async updatePostComment(
         postId: string,
         commentId: string,
-        text: string,
+        updatePostCommentDto: UpdatePostCommentDto,
         userId: string,
     ): Promise<PostComment> {
         const postCommentToUpdate = await this.postCommentRepository.getCommentById(postId, commentId);
 
         if (postCommentToUpdate?.userId === userId) {
-            postCommentToUpdate.text = text;
+            postCommentToUpdate.text = updatePostCommentDto.text;
             return await this.postCommentRepository.save(postCommentToUpdate);
         }
 

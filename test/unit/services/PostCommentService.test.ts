@@ -6,6 +6,7 @@ import { PostCommentRepository } from "../../../src/repositories/PostCommentRepo
 import { PostCommentService } from "../../../src/services/PostCommentService";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
 import { PostSeed } from "../../utils/seeds/PostTestSeed";
+import { UpdatePostCommentDto, CreatePostCommentDto } from "../../../src/dtos/PostCommentDto";
 
 describe("PostCommentService", () => {
     let db: Connection;
@@ -33,10 +34,20 @@ describe("PostCommentService", () => {
         updateText: "테스트 댓글 업데이트 내용입니다.",
     };
 
+    const createPostCommentDto = new CreatePostCommentDto();
+    createPostCommentDto.text = request.text;
+
+    const updatePostCommentDto = new UpdatePostCommentDto();
+    updatePostCommentDto.text = request.updateText;
+
     let postCommentId: string;
 
     it("포스트 댓글을 작성한다", async () => {
-        const postComment = await postCommentService.createPostComment(request.postId, request.text, request.userId);
+        const postComment = await postCommentService.createPostComment(
+            request.postId,
+            createPostCommentDto,
+            request.userId,
+        );
         postCommentId = postComment.id;
         expect(postComment.postId).toBe(request.postId);
         expect(postComment.text).toBe(request.text);
@@ -53,7 +64,7 @@ describe("PostCommentService", () => {
         const postComment = await postCommentService.updatePostComment(
             request.postId,
             postCommentId,
-            request.updateText,
+            updatePostCommentDto,
             request.userId,
         );
         expect(postComment.postId).toBe(request.postId);
@@ -65,7 +76,7 @@ describe("PostCommentService", () => {
         const postComment = await postCommentService.updatePostComment(
             request.postId,
             postCommentId,
-            request.updateText,
+            updatePostCommentDto,
             "notUserId",
         );
         expect(postComment).toBeNull();

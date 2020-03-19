@@ -1,10 +1,10 @@
 import { PostService } from "../services/PostService";
 import { PostCommentService } from "../services/PostCommentService";
 import { JsonController, Get, Param, Body, Post, Put, UseBefore, Res, Delete, HttpCode } from "routing-controllers";
-import { PostComment } from "../entities/PostComment";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
 import { OpenAPI } from "routing-controllers-openapi";
+import { CreatePostCommentDto, UpdatePostCommentDto } from "../dtos/PostCommentDto";
 
 @JsonController("/posts")
 export class PostCommentController {
@@ -23,13 +23,17 @@ export class PostCommentController {
         security: [{ bearerAuth: [] }],
     })
     @UseBefore(checkAccessToken)
-    public async create(@Param("postId") postId: string, @Body() postComment: PostComment, @Res() res: Response) {
+    public async create(
+        @Param("postId") postId: string,
+        @Body() createPostCommentDto: CreatePostCommentDto,
+        @Res() res: Response,
+    ) {
         const { userId } = res.locals.jwtPayload;
 
         const isPost = await this.postService.isPostById(postId);
 
         if (isPost) {
-            return await this.postCommentService.createPostComment(postId, postComment.text, userId);
+            return await this.postCommentService.createPostComment(postId, createPostCommentDto, userId);
         } else {
             return res.status(400).send({ message: "일치하는 Post가 없습니다." });
         }
@@ -72,14 +76,14 @@ export class PostCommentController {
     public async update(
         @Param("postId") postId: string,
         @Param("id") commentId: string,
-        @Body() postComment: PostComment,
+        @Body() updatePostCommentDto: UpdatePostCommentDto,
         @Res() res: Response,
     ) {
         const { userId } = res.locals.jwtPayload;
         const updatedPostComment = await this.postCommentService.updatePostComment(
             postId,
             commentId,
-            postComment.text,
+            updatePostCommentDto,
             userId,
         );
 
