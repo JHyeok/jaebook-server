@@ -1,36 +1,73 @@
-## ❯ JaeBook Server
+# ❯ JaeBook Server
 
-TypeScript와 Express를 사용해서 만든 서버
+Using TypeScript and Express.
 
-### TechStack
+### Project Features
 
-- **Express**
-- **TypeScript**
-- **Structure** 컨트롤러, 서비스, 리포지토리, 모델, 미들웨어의 계층 구조
-- **TypeORM** Hibernate, Doctrine 및 Entity Framework의 영향을 많이 받은 ORM
-- **TypeDI** JavaScript 및 TypeScript를 위한 의존성 주입
-- **Routing-Controllers** 구조적이고 선언적이며 아름답게 구성된 클래스 기반 컨트롤러
-- **JWT** AccessToken, RefreshToken을 이용
-- **ESLint, Prettier** 코드 스타일 일관성 유지
-- **Jest** 단위 테스트
-- **SuperTest** E2E 테스트
+- **Express with TypeScript**
+- **Structure** Beautiful structure of controller, service, repository, model, middleware.
+- **TypeORM** highly influenced by other ORMs, such as Hibernate, Doctrine and Entity Framework.
+- **TypeDI** Dependency Injection for TypeScript.
+- **Routing-Controllers** Structured, declarative, and beautifully configured class-based controller.
+- **Helmet** Basic Security Features.
+- **JWT** JWT security strategy using AccessToken, RefreshToken.
+- **Jest, SuperTest** Unit Testing and E2E testing.
+- **Sentry, Winston** Error logging and monitoring.
+- **Swagger** API endpoint documentation.
+- **ESLint** Find and fix problems in your TypeScript code.
+- **Prettier** Prettier is an opinionated code formatter.
+
+### Unit Testing and E2E testing
+
+Test using In-memory Database.
+
+![jaebook-unit-e2e-testing](./readme/jaebook-unit-e2e-testing.gif)
+
+### Error logging and monitoring
+
+![sentry-error-log](./readme/sentry-error-log.png)
+
+![winston-error-log](./readme/winston-error-log.png)
+
+### Swagger
+
+![swagger](./readme/swagger.gif)
+
+### Coding style automation with ESLint, Prettier and VSCode
+
+By setting options for your team, you can keep your team's coding style consistent.
+
+![eslint-prettier](./readme/eslint-prettier.gif)
 
 ### Environment Variable Management
 
-`jaebook-server/config/`에서 `.sample`확장자 지우고 사용
+Delete `.sample` extension from` jaebook-server / config / `and use
 
 ```env
+# APPLICATION
 PORT=3000
-API_PREFIX=api
+API_PREFIX=/api
+
+# MySQL DATABASE
 DATABASE_HOST=127.0.0.1
 DATABASE_PORT=3306
 DATABASE_USERNAME=development
 DATABASE_PASSWORD=development
 DATABASE_NAME=development
+
+# TypeORM
 TYPEORM_SYNCHRONIZE=true
 TYPEORM_LOGGING=true
+
+# JWT
 JWT_SECRET_ACCESS_KEY=test!@#$
 JWT_SECRET_REFRESH_KEY=retest!@#$
+
+# Swagger
+SWAGGER_ROUTE=/api-docs
+
+# Sentry
+SENTRY_DSN=
 ```
 
 ### Build Setup
@@ -38,7 +75,7 @@ JWT_SECRET_REFRESH_KEY=retest!@#$
 Steps to run this project:
 
 1. Run `yarn install` command
-2. Run `docker-compose up` command
+2. Run `yarn build` command
 3. Run `yarn start` command
 
 ### Tests
