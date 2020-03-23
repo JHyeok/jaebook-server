@@ -1,4 +1,3 @@
-import { UserService } from "../services/UserService";
 import { PostService } from "../services/PostService";
 import {
     JsonController,
