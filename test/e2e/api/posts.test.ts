@@ -38,33 +38,8 @@ afterAll(async () => {
     await db.close();
 });
 
-describe("GET /api/posts", () => {
-    it("200: Post 조회에 성공한다", async () => {
-        const response = await request(app)
-            .get("/api/posts?offset=0&limit=20")
-            .set(setHeader(""))
-            .expect(200);
-
-        const { body } = response;
-        expect(body[1].title).toBe(PostSeed[0].title);
-        expect(body[1].previewContent).toBe(PostSeed[0].previewContent);
-        expect(body[0].title).toBe(PostSeed[1].title);
-        expect(body[0].previewContent).toBe(PostSeed[1].previewContent);
-    });
-
-    it("204: offset과 limit에 해당하는 Post가 없어서 빈 객체를 반환한다", async () => {
-        const response = await request(app)
-            .get("/api/posts?offset=20&limit=20")
-            .set(setHeader(""))
-            .expect(204);
-
-        const { body } = response;
-        expect(body).toStrictEqual({});
-    });
-});
-
 describe("GET /api/posts/:id", () => {
-    it("200: Post 반환에 성공하고 조회수가 1증가한다.", async () => {
+    it("200: Post 조회에 성공해서 조회수, 점수가 증가한다", async () => {
         const response = await request(app)
             .get(`/api/posts/${PostSeed[0].id}`)
             .set(setHeader(""))
@@ -75,6 +50,7 @@ describe("GET /api/posts/:id", () => {
         expect(body.content).toBe(PostSeed[0].content);
         expect(body.previewContent).toBe(PostSeed[0].previewContent);
         expect(body.view).toBe(1);
+        expect(body.score).toBe(1);
     });
 
     it("400: 해당하는 Post가 없어서 조회에 실패한다", async () => {
@@ -82,6 +58,47 @@ describe("GET /api/posts/:id", () => {
             .get("/api/posts/notId")
             .set(setHeader(""))
             .expect(400);
+    });
+});
+
+describe("GET /api/posts", () => {
+    it("200: Post 조회에 성공한다", async () => {
+        const response = await request(app)
+            .get("/api/posts?offset=0&limit=20")
+            .set(setHeader(""))
+            .expect(200);
+
+        const { body } = response;
+        expect(body.length).toBe(2);
+        expect(body[0].title).toBe(PostSeed[1].title);
+        expect(body[0].previewContent).toBe(PostSeed[1].previewContent);
+        expect(body[1].title).toBe(PostSeed[0].title);
+        expect(body[1].previewContent).toBe(PostSeed[0].previewContent);
+    });
+
+    // PostSeed[0]의 점수가 1이기 때문에(조회로 인한 증가) 더 인기글이다.
+    it("200: 주간 인기 Post 조회에 성공한다", async () => {
+        const response = await request(app)
+            .get("/api/posts?offset=0&limit=8&sort=best")
+            .set(setHeader(""))
+            .expect(200);
+
+        const { body } = response;
+        expect(body.length).toBe(2);
+        expect(body[0].title).toBe(PostSeed[0].title);
+        expect(body[0].previewContent).toBe(PostSeed[0].previewContent);
+        expect(body[1].title).toBe(PostSeed[1].title);
+        expect(body[1].previewContent).toBe(PostSeed[1].previewContent);
+    });
+
+    it("204: offset과 limit에 해당하는 Post가 없어서 빈 객체를 반환한다", async () => {
+        const response = await request(app)
+            .get("/api/posts?offset=20&limit=20")
+            .set(setHeader(""))
+            .expect(204);
+
+        const { body } = response;
+        expect(body).toStrictEqual({});
     });
 });
 
