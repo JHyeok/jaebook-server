@@ -20,6 +20,31 @@ export class PostRepository extends Repository<Post> {
             .getMany();
     }
 
+    public async getBestPosts(
+        offset: number,
+        limit: number,
+        createdAtBeforeWeek: Date,
+    ) {
+        return this.createQueryBuilder("post")
+            .select([
+                "post.id",
+                "post.title",
+                "post.previewContent",
+                "post.createdAt",
+                "post.view",
+                "post.like",
+                "post.score",
+            ])
+            .leftJoinAndSelect("post.user", "user")
+            .where("post.createdAt >= :createdAtBeforeWeek", {
+                createdAtBeforeWeek,
+            })
+            .orderBy("post.score", "DESC")
+            .skip(offset)
+            .take(limit)
+            .getMany();
+    }
+
     public async getPostById(postId: string) {
         return this.createQueryBuilder("post")
             .leftJoinAndSelect("post.user", "user")

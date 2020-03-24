@@ -8,14 +8,14 @@ import {
     Put,
     UseBefore,
     Res,
-    QueryParam,
     Delete,
     HttpCode,
+    QueryParams,
 } from "routing-controllers";
 import { checkAccessToken } from "../middlewares/AuthMiddleware";
 import { Response } from "express";
-import { OpenAPI } from "routing-controllers-openapi";
-import { CreatePostDto, UpdatePostDto } from "../dtos/PostDto";
+import { OpenAPI, ResponseSchema } from "routing-controllers-openapi";
+import { CreatePostDto, UpdatePostDto, PageablePostDto } from "../dtos/PostDto";
 
 @JsonController("/posts")
 export class PostController {
@@ -53,12 +53,16 @@ export class PostController {
             },
         },
     })
+    @ResponseSchema(PageablePostDto)
     public async getAll(
-        @QueryParam("offset") offset: number,
-        @QueryParam("limit") limit: number,
+        @QueryParams() pageablePostDto: PageablePostDto,
         @Res() res: Response,
     ) {
-        const posts = await this.postService.getPosts(offset, limit);
+        const posts = await this.postService.getPosts(
+            pageablePostDto.offset,
+            pageablePostDto.limit,
+            pageablePostDto.sort,
+        );
 
         if (posts.length === 0) {
             return res.status(204).send(posts);

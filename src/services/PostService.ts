@@ -20,8 +20,22 @@ export class PostService {
         return newPost;
     }
 
-    public getPosts(offset: number, limit: number): Promise<Post[]> {
-        return this.postRepository.getPosts(offset, limit);
+    public getPosts(
+        offset: number,
+        limit: number,
+        sort?: string,
+    ): Promise<Post[]> {
+        switch (sort) {
+            case "best":
+                const dateBeforeWeek = this.getDateBeforeWeek();
+                return this.postRepository.getBestPosts(
+                    offset,
+                    limit,
+                    dateBeforeWeek,
+                );
+            default:
+                return this.postRepository.getPosts(offset, limit);
+        }
     }
 
     public getPostById(postId: string): Promise<Post> {
@@ -85,5 +99,12 @@ export class PostService {
         }
 
         return false;
+    }
+
+    private getDateBeforeWeek(): Date {
+        const date = new Date();
+        date.setDate(date.getDate() - 7);
+
+        return date;
     }
 }

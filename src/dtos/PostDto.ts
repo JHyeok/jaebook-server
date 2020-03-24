@@ -1,4 +1,11 @@
-import { IsNotEmpty } from "class-validator";
+import {
+    IsNotEmpty,
+    IsPositive,
+    IsNumber,
+    Max,
+    IsString,
+    IsOptional,
+} from "class-validator";
 import { Post } from "../entities/Post";
 
 export class CreatePostDto {
@@ -25,4 +32,18 @@ export class UpdatePostDto {
 
     @IsNotEmpty()
     public content: string;
+}
+
+export class PageablePostDto {
+    @IsNumber()
+    public offset: number;
+
+    @IsNumber()
+    @Max(20)
+    @IsPositive()
+    public limit: number;
+
+    @IsOptional()
+    @IsString()
+    public sort: string;
 }

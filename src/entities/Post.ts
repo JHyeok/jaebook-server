@@ -7,6 +7,7 @@ import {
     ManyToOne,
     JoinColumn,
     OneToMany,
+    BeforeUpdate,
 } from "typeorm";
 import { IsNotEmpty } from "class-validator";
 import { User } from "./User";
@@ -45,6 +46,9 @@ export class Post {
     @Column({ default: 0 })
     public like: number;
 
+    @Column({ default: 0, comment: "Best Post에 기준이 되는 점수" })
+    public score: number;
+
     @OneToMany(
         type => PostComment,
         postComment => postComment.post,
@@ -56,4 +60,9 @@ export class Post {
 
     @UpdateDateColumn({ name: "updated_at" })
     public updatedAt: Date;
+
+    @BeforeUpdate()
+    public async calculateScoreUsingViewAndLike() {
+        this.score = Number(this.view) + Number(this.like) * 500;
+    }
 }
