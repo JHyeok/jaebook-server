@@ -16,3 +16,7 @@ logs/
 
 # Ignore test-related files
 /coverage/
+
+# Serverless
+.build
+.serverless
