@@ -30,4 +30,12 @@ export class UserController {
 
         return user;
     }
+
+    @HttpCode(200)
+    @Get("/test")
+    public async getTest() {
+        return {
+            message: "안녕하세요.",
+        };
+    }
 }

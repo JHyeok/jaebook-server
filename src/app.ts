@@ -20,6 +20,7 @@ export class App {
         this.app = express();
         this.setDatabase();
         this.setMiddlewares();
+        this.setRouting();
     }
 
     private async setDatabase() {
@@ -36,18 +37,22 @@ export class App {
         this.app.use(morgan("combined", { stream }));
     }
 
-    public async createExpressServer(port: number) {
+    private setRouting() {
         try {
+            this.app.get(
+                "/hello",
+                (req: express.Request, res: express.Response) => {
+                    return res.json({ message: "Hello" });
+                },
+            );
             routingUseContainer(Container);
             useExpressServer(this.app, routingControllerOptions);
             useSwagger(this.app);
             useSentry(this.app);
-
-            this.app.listen(port, () => {
-                logger.info(`Server is running on http://localhost:${port}`);
-            });
         } catch (error) {
             logger.error(error);
         }
     }
 }
+
+export default new App().app;

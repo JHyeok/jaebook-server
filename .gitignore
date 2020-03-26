@@ -17,6 +17,9 @@ logs/
 # Ignore test-related files
 /coverage/
 
+# Webpack
+.webpack
+
 # Serverless
 .build
 .serverless

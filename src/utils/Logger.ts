@@ -19,13 +19,13 @@ const {
     errors,
 } = format;
 
-const logDirectory = "logs";
-const filename = join(logDirectory, "app-%DATE%.log");
+// const logDirectory = "logs";
+// const filename = join(logDirectory, "app-%DATE%.log");
 const level = process.env.NODE_ENV === "production" ? "error" : "debug";
 
-if (!existsSync(logDirectory)) {
-    mkdirSync(logDirectory);
-}
+// if (!existsSync(logDirectory)) {
+//     mkdirSync(logDirectory);
+// }
 
 // 콘솔 로그 출력 포맷 설정
 const consoleOutputFormat = combine(
@@ -38,15 +38,15 @@ const consoleOutputFormat = combine(
 );
 
 // 파일 로그 출력 포맷 설정
-const fileOutputFormat = combine(
-    printf(info => {
-        if (info.stack) {
-            return `${info.timestamp} ${info.level} ${info.message} : ${info.stack}`;
-        }
+// const fileOutputFormat = combine(
+//     printf(info => {
+//         if (info.stack) {
+//             return `${info.timestamp} ${info.level} ${info.message} : ${info.stack}`;
+//         }
 
-        return `${info.timestamp} ${info.level}: ${info.message}`;
-    }),
-);
+//         return `${info.timestamp} ${info.level}: ${info.message}`;
+//     }),
+// );
 
 const options: LoggerOptions = {
     level,
@@ -62,11 +62,11 @@ const options: LoggerOptions = {
             format: consoleOutputFormat,
         }),
         // 파일 로그 출력
-        new DailyRotateFile({
-            handleExceptions: true,
-            format: fileOutputFormat,
-            filename,
-        }),
+        // new DailyRotateFile({
+        //     handleExceptions: true,
+        //     format: fileOutputFormat,
+        //     filename,
+        // }),
     ],
 };
 
