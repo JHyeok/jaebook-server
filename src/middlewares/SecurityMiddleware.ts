@@ -7,7 +7,7 @@ import helmet from "helmet";
  */
 @Middleware({ type: "before" })
 export class SecurityMiddleware implements ExpressMiddlewareInterface {
-    use(req: Request, res: Response, next: NextFunction): any {
-        return helmet()(req, res, next);
-    }
+  use(req: Request, res: Response, next: NextFunction): any {
+    return helmet()(req, res, next);
+  }
 }

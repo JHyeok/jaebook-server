@@ -8,12 +8,12 @@ import { User } from "../entities/User";
  * @param req
  */
 const extractAccessToken = (req: Request) => {
-    if (
-        req.headers.authorization &&
-        req.headers.authorization.split(" ")[0] === "Bearer"
-    ) {
-        return req.headers.authorization.split(" ")[1];
-    }
+  if (
+    req.headers.authorization &&
+    req.headers.authorization.split(" ")[0] === "Bearer"
+  ) {
+    return req.headers.authorization.split(" ")[1];
+  }
 };
 
 /**
@@ -21,9 +21,9 @@ const extractAccessToken = (req: Request) => {
  * @param req
  */
 const extractRefreshToken = (req: Request) => {
-    if (req.body.refresh_token && req.body.grant_type === "refresh_token") {
-        return req.body.refresh_token;
-    }
+  if (req.body.refresh_token && req.body.grant_type === "refresh_token") {
+    return req.body.refresh_token;
+  }
 };
 
 /**
@@ -33,23 +33,21 @@ const extractRefreshToken = (req: Request) => {
  * @param next
  */
 export const checkAccessToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    const token = extractAccessToken(req);
-    let jwtPayload;
+  const token = extractAccessToken(req);
+  let jwtPayload;
 
-    try {
-        jwtPayload = jwt.verify(token, env.app.jwtAccessSecret);
-        res.locals.jwtPayload = jwtPayload;
-    } catch (error) {
-        return res
-            .status(401)
-            .send({ message: "Invalid or Missing JWT token" });
-    }
+  try {
+    jwtPayload = jwt.verify(token, env.app.jwtAccessSecret);
+    res.locals.jwtPayload = jwtPayload;
+  } catch (error) {
+    return res.status(401).send({ message: "Invalid or Missing JWT token" });
+  }
 
-    next();
+  next();
 };
 
 /**
@@ -59,24 +57,22 @@ export const checkAccessToken = (
  * @param next
  */
 export const checkRefreshToken = (
-    req: Request,
-    res: Response,
-    next: NextFunction,
+  req: Request,
+  res: Response,
+  next: NextFunction,
 ) => {
-    const token = extractRefreshToken(req);
-    let jwtPayload;
+  const token = extractRefreshToken(req);
+  let jwtPayload;
 
-    try {
-        jwtPayload = jwt.verify(token, env.app.jwtRefreshSecret);
-        res.locals.jwtPayload = jwtPayload;
-        res.locals.token = token;
-    } catch (error) {
-        return res
-            .status(401)
-            .send({ message: "Invalid or Missing JWT token" });
-    }
+  try {
+    jwtPayload = jwt.verify(token, env.app.jwtRefreshSecret);
+    res.locals.jwtPayload = jwtPayload;
+    res.locals.token = token;
+  } catch (error) {
+    return res.status(401).send({ message: "Invalid or Missing JWT token" });
+  }
 
-    next();
+  next();
 };
 
 /**
@@ -84,13 +80,13 @@ export const checkRefreshToken = (
  * @param user
  */
 export const generateAccessToken = (user: User) => {
-    return jwt.sign(
-        { userId: user.id, userName: user.realName, userEmail: user.email },
-        env.app.jwtAccessSecret,
-        {
-            expiresIn: "30m",
-        },
-    );
+  return jwt.sign(
+    { userId: user.id, userName: user.realName, userEmail: user.email },
+    env.app.jwtAccessSecret,
+    {
+      expiresIn: "30m",
+    },
+  );
 };
 
 /**
@@ -98,7 +94,7 @@ export const generateAccessToken = (user: User) => {
  * @param user
  */
 export const generateRefreshToken = (user: User) => {
-    return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, {
-        expiresIn: "14d",
-    });
+  return jwt.sign({ userId: user.id }, env.app.jwtRefreshSecret, {
+    expiresIn: "14d",
+  });
 };

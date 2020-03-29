@@ -6,50 +6,48 @@ import { LoginUserDto } from "../dtos/UserDto";
 
 @Service()
 export class AuthService {
-    constructor(@InjectRepository() private userRepository: UserRepository) {}
+  constructor(@InjectRepository() private userRepository: UserRepository) {}
 
-    public async validateUser(loginUserDto: LoginUserDto): Promise<User> {
-        const user = await this.userRepository.findOne({
-            select: ["id", "realName", "email", "password"],
-            where: {
-                email: loginUserDto.email,
-            },
-        });
+  public async validateUser(loginUserDto: LoginUserDto): Promise<User> {
+    const user = await this.userRepository.findOne({
+      select: ["id", "realName", "email", "password"],
+      where: {
+        email: loginUserDto.email,
+      },
+    });
 
-        if (user) {
-            const isPasswordMatch = await user.comparePassword(
-                loginUserDto.password,
-            );
+    if (user) {
+      const isPasswordMatch = await user.comparePassword(loginUserDto.password);
 
-            if (isPasswordMatch) {
-                return user;
-            }
-        }
-
-        return undefined;
+      if (isPasswordMatch) {
+        return user;
+      }
     }
 
-    public async validateUserToken(
-        userId: string,
-        refreshToekn: string,
-    ): Promise<User> {
-        const user = await this.userRepository.findOne({
-            select: ["id", "realName", "email"],
-            where: {
-                id: userId,
-                refreshToekn: refreshToekn,
-            },
-        });
+    return undefined;
+  }
 
-        if (user) {
-            return user;
-        }
+  public async validateUserToken(
+    userId: string,
+    refreshToekn: string,
+  ): Promise<User> {
+    const user = await this.userRepository.findOne({
+      select: ["id", "realName", "email"],
+      where: {
+        id: userId,
+        refreshToekn: refreshToekn,
+      },
+    });
 
-        return undefined;
+    if (user) {
+      return user;
     }
 
-    public async saveRefreshToken(user: User, token: string): Promise<void> {
-        user.refreshToekn = token;
-        await this.userRepository.save(user);
-    }
+    return undefined;
+  }
+
+  public async saveRefreshToken(user: User, token: string): Promise<void> {
+    user.refreshToekn = token;
+    await this.userRepository.save(user);
+  }
 }

@@ -7,98 +7,98 @@ import { PostLikeRepository } from "../repositories/PostLikeRepository";
 
 @Service()
 export class PostLikeService {
-    constructor(
-        @InjectRepository() private postRepository: PostRepository,
-        @InjectRepository() private postLikeRepository: PostLikeRepository,
-    ) {}
+  constructor(
+    @InjectRepository() private postRepository: PostRepository,
+    @InjectRepository() private postLikeRepository: PostLikeRepository,
+  ) {}
 
-    /**
-     * 포스트에 좋아요를 눌렀었는지 확인한다
-     * @param postId 포스트Id
-     * @param userId 유저Id
-     * @returns true는 좋아요를 한 상태, false는 좋아요를 하지 않은 상태
-     */
-    public async isPostLike(postId: string, userId: string): Promise<boolean> {
-        const postLike = await this.postLikeRepository.findOne({
-            where: {
-                postId: postId,
-                userId: userId,
-            },
-        });
+  /**
+   * 포스트에 좋아요를 눌렀었는지 확인한다
+   * @param postId 포스트Id
+   * @param userId 유저Id
+   * @returns true는 좋아요를 한 상태, false는 좋아요를 하지 않은 상태
+   */
+  public async isPostLike(postId: string, userId: string): Promise<boolean> {
+    const postLike = await this.postLikeRepository.findOne({
+      where: {
+        postId: postId,
+        userId: userId,
+      },
+    });
 
-        if (postLike) {
-            return true;
-        } else {
-            return false;
-        }
+    if (postLike) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
+  /**
+   * 포스트에 좋아요를 한다
+   * @param postId 포스트Id
+   * @param userId 유저Id
+   */
+  public async likePost(postId: string, userId: string): Promise<Post> {
+    const post = await this.postRepository.findOne(postId);
+
+    const alreadyPostLiked = await this.postLikeRepository.findOne({
+      where: {
+        postId: postId,
+        userId: userId,
+      },
+    });
+
+    if (alreadyPostLiked) {
+      return post;
     }
 
-    /**
-     * 포스트에 좋아요를 한다
-     * @param postId 포스트Id
-     * @param userId 유저Id
-     */
-    public async likePost(postId: string, userId: string): Promise<Post> {
-        const post = await this.postRepository.findOne(postId);
+    const postLike = new PostLike();
+    postLike.postId = postId;
+    postLike.userId = userId;
+    await this.postLikeRepository.save(postLike);
 
-        const alreadyPostLiked = await this.postLikeRepository.findOne({
-            where: {
-                postId: postId,
-                userId: userId,
-            },
-        });
+    const postLikeCount = await this.postLikeRepository.count({
+      where: {
+        postId: postId,
+      },
+    });
 
-        if (alreadyPostLiked) {
-            return post;
-        }
+    post.like = postLikeCount;
+    await this.postRepository.save(post);
 
-        const postLike = new PostLike();
-        postLike.postId = postId;
-        postLike.userId = userId;
-        await this.postLikeRepository.save(postLike);
+    return post;
+  }
 
-        const postLikeCount = await this.postLikeRepository.count({
-            where: {
-                postId: postId,
-            },
-        });
+  /**
+   * 포스트에 좋아요를 취소한다
+   * @param postId 포스트Id
+   * @param userId 유저Id
+   */
+  public async unlikePost(postId: string, userId: string): Promise<Post> {
+    const post = await this.postRepository.findOne(postId);
 
-        post.like = postLikeCount;
-        await this.postRepository.save(post);
+    const postLike = await this.postLikeRepository.findOne({
+      where: {
+        postId: postId,
+        userId: userId,
+      },
+    });
 
-        return post;
+    if (!postLike) {
+      return post;
     }
 
-    /**
-     * 포스트에 좋아요를 취소한다
-     * @param postId 포스트Id
-     * @param userId 유저Id
-     */
-    public async unlikePost(postId: string, userId: string): Promise<Post> {
-        const post = await this.postRepository.findOne(postId);
+    await this.postLikeRepository.remove(postLike);
 
-        const postLike = await this.postLikeRepository.findOne({
-            where: {
-                postId: postId,
-                userId: userId,
-            },
-        });
+    const postLikeCount = await this.postLikeRepository.count({
+      where: {
+        postId: postId,
+      },
+    });
 
-        if (!postLike) {
-            return post;
-        }
+    post.like = postLikeCount;
+    await this.postRepository.save(post);
 
-        await this.postLikeRepository.remove(postLike);
-
-        const postLikeCount = await this.postLikeRepository.count({
-            where: {
-                postId: postId,
-            },
-        });
-
-        post.like = postLikeCount;
-        await this.postRepository.save(post);
-
-        return post;
-    }
+    return post;
+  }
 }

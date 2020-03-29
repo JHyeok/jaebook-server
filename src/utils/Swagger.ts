@@ -8,32 +8,32 @@ import { routingControllerOptions } from "./RoutingConfig";
 import { env } from "../env";
 
 export function useSwagger(app: express.Application) {
-    // Parse class-validator classes into JSON Schema:
-    const metadatas = (getFromContainer(MetadataStorage) as any)
-        .validationMetadatas;
-    const schemas = validationMetadatasToSchemas(metadatas, {
-        refPointerPrefix: "#/components/schemas",
-    });
+  // Parse class-validator classes into JSON Schema:
+  const metadatas = (getFromContainer(MetadataStorage) as any)
+    .validationMetadatas;
+  const schemas = validationMetadatasToSchemas(metadatas, {
+    refPointerPrefix: "#/components/schemas",
+  });
 
-    // Parse routing-controllers classes into OPENAPI spec:
-    const storage = getMetadataArgsStorage();
-    const spec = routingControllersToSpec(storage, routingControllerOptions, {
-        components: {
-            schemas,
-            securitySchemes: {
-                bearerAuth: {
-                    type: "http",
-                    scheme: "bearer",
-                    bearerFormat: "JWT",
-                },
-            },
+  // Parse routing-controllers classes into OPENAPI spec:
+  const storage = getMetadataArgsStorage();
+  const spec = routingControllersToSpec(storage, routingControllerOptions, {
+    components: {
+      schemas,
+      securitySchemes: {
+        bearerAuth: {
+          type: "http",
+          scheme: "bearer",
+          bearerFormat: "JWT",
         },
-        info: {
-            title: "JaeBook Server",
-            description: "JaeBook API",
-            version: "1.0.0",
-        },
-    });
+      },
+    },
+    info: {
+      title: "JaeBook Server",
+      description: "JaeBook API",
+      version: "1.0.0",
+    },
+  });
 
-    app.use(env.swagger.route, swaggerUi.serve, swaggerUi.setup(spec));
+  app.use(env.swagger.route, swaggerUi.serve, swaggerUi.setup(spec));
 }
