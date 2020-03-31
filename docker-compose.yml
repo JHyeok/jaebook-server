@@ -1,13 +1,47 @@
 version: '3'
 services:
-
-  mysql:
-    image: "mysql:5.7.10"
+  db:
+    image: "mariadb:10.4.12"
+    container_name: jaebook-db
+    volumes:
+      - dbdata:/var/lib/mysql
     ports:
       - "3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: "admin"
       MYSQL_USER: "test"
       MYSQL_PASSWORD: "test"
-      MYSQL_DATABASE: "test"
+      MYSQL_DATABASE: "jaebook"
+    command: ['mysqld', '--character-set-server=utf8mb4', '--collation-server=utf8mb4_general_ci', '--skip-character-set-client-handshake']
+    networks:
+      - app
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    container_name: jaebook-server
+    restart: always
+    volumes:
+      - appdata:/app
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+    command:
+      - bash
+      - -c
+      - |
+        /wait-for-it.sh db:3306 -t 15
+        yarn start
+    networks:
+      - app
 
+networks:
+  app:
+    driver: bridge
+
+volumes:
+  dbdata:
+    driver: local
+  appdata:
+    driver: local
