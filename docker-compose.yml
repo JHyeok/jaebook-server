@@ -6,6 +6,7 @@ services:
     volumes:
       - dbdata:/var/lib/mysql
       - ./docker/mysql/custom.cnf:/etc/mysql/conf.d/custom.cnf
+      - ./docker/mysql/logs:/var/log/mysql
     ports:
       - "3306:3306"
     environment:
