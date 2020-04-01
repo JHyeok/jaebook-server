@@ -1,4 +1,4 @@
-version: '3'
+version: "3.7"
 services:
   db:
     image: "mariadb:10.4.12"
@@ -15,10 +15,23 @@ services:
       MYSQL_DATABASE: ${DB_NAME}
     networks:
       - app
+  nginx:
+    restart: always
+    build:
+      context: ./docker/nginx
+      dockerfile: Dockerfile
+    volumes:
+      - ./docker/nginx/logs:/var/log/nginx
+    ports:
+      - "80:80"
+    depends_on:
+      - server
+    networks:
+      - app
   server:
     build:
-      context: .
-      dockerfile: ./Dockerfile
+      context: ./
+      dockerfile: Dockerfile
     container_name: jaebook-server
     restart: always
     volumes:
