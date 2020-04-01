@@ -6,7 +6,7 @@ tmp/
 temp/
 
 # Ignore log file
-logs/
+logs/**.log
 
 # Ignore dotenv file
 .env
