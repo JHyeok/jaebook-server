@@ -1,4 +1,4 @@
-FROM node:12.13.0-alpine
+FROM node:12.16.1-alpine
 
 ARG PROJECT_DIR=/usr/src/app
 
@@ -6,7 +6,6 @@ COPY . $PROJECT_DIR
 WORKDIR $PROJECT_DIR
 
 RUN apk add --no-cache --update bash make gcc g++ python && \
-  npm install -g yarn && \
   yarn install && \
   npm rebuild bcrypt --build-from-source && \
   yarn build && \
