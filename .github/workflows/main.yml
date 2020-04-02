@@ -18,6 +18,10 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Set env files
+        run: |
+          cp .env.sample .env
+          cp config/.env.test.sample config/.env.test
       - name: Install & Tests
         run: |
           npm install
