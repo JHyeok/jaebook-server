@@ -21,6 +21,7 @@ services:
     build:
       context: ./docker/nginx
       dockerfile: Dockerfile
+    container_name: jaebook-nginx
     volumes:
       - ./docker/nginx/logs:/var/log/nginx
     ports:
