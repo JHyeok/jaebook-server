@@ -47,4 +47,4 @@ jobs:
       - name: Push
         run: |
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
-          docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:lates
+          docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
