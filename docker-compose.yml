@@ -31,9 +31,7 @@ services:
     networks:
       - app
   server:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    image: "jhyeok/jaebook-server:0.1"
     container_name: jaebook-server
     restart: always
     volumes:
