@@ -12,6 +12,7 @@ on:
         
 jobs:
   ci:
+    name: Source update and Testing
     runs-on: ubuntu-latest
     container:
       image: node
@@ -27,24 +28,25 @@ jobs:
           npm install
           npm test
   cd:
+    name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
     needs: ci
 
     steps:
-      - uses: actions/checkout@v1
-      - name: Docker login
-        run: docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
-      - name: Set env files
-        run: |
-          cp .env.sample .env
-          cp config/.env.production.sample config/.env.production
-      - name: Build
-        run: docker build -t ${{ secrets.SERVER_IMAGE_NAME }} .
-      - name: Tags
-        run: |
+    - name: SSH and Build Docker image and Push
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.HOST }}
+        username: ${{ secrets.USERNAME }}
+        key: ${{ secrets.KEY }}
+        port: ${{ secrets.PORT }}
+        script: |
+          cd ${{ secrets.SERVER_FILE_DIRECTORY }}
+          git stash
+          git pull origin master
+          docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
+          docker build -t ${{ secrets.SERVER_IMAGE_NAME }} .
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
-      - name: Push
-        run: |
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
