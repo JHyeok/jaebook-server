@@ -5,10 +5,12 @@ build/
 tmp/
 temp/
 
-# Ignore log file
-logs/**.log
+# Ignore log files
+logs/*.log
+docker/mysql/logs/*.log
+docker/nginx/logs/*.log
 
-# Ignore dotenv file
+# Ignore dotenv files
 .env
 .env.development
 .env.production
