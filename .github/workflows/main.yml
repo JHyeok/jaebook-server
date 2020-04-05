@@ -18,7 +18,8 @@ jobs:
       image: node
 
     steps:
-      - uses: actions/checkout@v1
+      - uses: actions/checkout@v2
+      - uses: codecov/codecov-action@v1
       - name: Set env files
         run: |
           cp .env.sample .env
@@ -27,6 +28,10 @@ jobs:
         run: |
           npm install
           npm test
+      - name: Upload coverage to Codecov  
+        uses: codecov/codecov-action@v1
+        with:
+          fail_ci_if_error: true
   cd:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest

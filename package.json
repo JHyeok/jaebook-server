@@ -80,6 +80,8 @@
             "tsConfig": "./tsconfig.json",
             "diagnostics": true
          }
-      }
+      },
+      "coverageDirectory": "./coverage/",
+      "collectCoverage": true
    }
 }
