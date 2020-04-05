@@ -16,6 +16,7 @@ Using TypeScript and Express.
 - **Swagger** API endpoint documentation.
 - **ESLint** Find and fix problems in your TypeScript code.
 - **Prettier** Prettier is an opinionated code formatter.
+- **Docker** Docker provides a simple and powerful developer experience, workflows and collaboration for creating applications.
 
 ### Unit Testing and E2E testing
 
@@ -41,7 +42,9 @@ By setting options for your team, you can keep your team's coding style consiste
 
 ### Environment Variable Management
 
-Delete `.sample` extension from` jaebook-server / config / `and use
+#### APP
+
+Edit from `.env.{NODE_ENV}.sample` in `jaebook-server/config` to `.env.{NODE_ENV}.` and replace the content.
 
 ```env
 # APPLICATION
@@ -70,13 +73,25 @@ SWAGGER_ROUTE=/api-docs
 SENTRY_DSN=
 ```
 
+#### Docker
+
+Edit from `.env.sample` in the root to `.env` and replace the content.
+This is the environment variable setting to be used for Docker.
+
+```
+# Set docker-compose environment
+DB_ROOT_PASSWORD=testpass
+DB_USER=test
+DB_PASSWORD=test
+DB_NAME=jaebook
+```
+
 ### Build Setup
 
 Steps to run this project:
 
 1. Run `yarn install` command
-2. Run `yarn build` command
-3. Run `yarn start` command
+2. Run `docker-compose up` command
 
 ### Tests
 
