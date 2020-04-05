@@ -19,7 +19,6 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2
-      - uses: codecov/codecov-action@v1
       - name: Set env files
         run: |
           cp .env.sample .env
@@ -31,6 +30,7 @@ jobs:
       - name: Upload coverage to Codecov  
         uses: codecov/codecov-action@v1
         with:
+          name: codecov-jaebook-server
           fail_ci_if_error: true
   cd:
     name: Push Docker image to Docker Hub
@@ -55,3 +55,4 @@ jobs:
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
+          docker image prune -f
