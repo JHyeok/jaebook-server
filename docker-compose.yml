@@ -31,7 +31,7 @@ services:
     networks:
       - app
   server:
-    image: "jhyeok/jaebook-server:0.1"
+    image: "jhyeok/jaebook-server:0.2"
     container_name: jaebook-server
     restart: always
     volumes:
