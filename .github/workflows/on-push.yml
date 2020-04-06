@@ -4,34 +4,41 @@ on:
   push:
     branches:
       - master
-      - github-action
-  pull_request:
-    branches:
-      - master
-      - github-action
         
 jobs:
   ci:
-    name: Source update and Testing
+    name: Lint and Test
     runs-on: ubuntu-latest
-    container:
-      image: node
 
     steps:
-      - uses: actions/checkout@v2
+      - name: Check out Git repository
+        uses: actions/checkout@v2
+
       - name: Set env files
         run: |
           cp .env.sample .env
           cp config/.env.test.sample config/.env.test
-      - name: Install & Tests
-        run: |
-          npm install
-          npm test
-      - name: Upload coverage to Codecov  
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install Node.js dependencies
+        run: npm install
+
+      - name: Run linters
+        run: npm run lint
+
+      - name: E2E Tests and Unit Tests
+        run: npm test
+
+      - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
         with:
           name: codecov-jaebook-server
           fail_ci_if_error: true
+
   cd:
     name: Push Docker image to Docker Hub
     runs-on: ubuntu-latest
@@ -55,4 +62,5 @@ jobs:
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
-          docker image prune -f
+          docker image prune -f -a
+          
