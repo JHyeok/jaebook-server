@@ -44,7 +44,7 @@ By setting options for your team, you can keep your team's coding style consiste
 
 #### APP
 
-Edit from `.env.{NODE_ENV}.sample` in `jaebook-server/config` to `.env.{NODE_ENV}.` and replace the content.
+Edit from `.env.{NODE_ENV}.sample` in `jaebook-server/config` to `.env.{NODE_ENV}` and replace the content.
 
 ```env
 # APPLICATION
@@ -92,6 +92,11 @@ Steps to run this project:
 
 1. Run `yarn install` command
 2. Run `docker-compose up` command
+
+### Development
+
+1. Run `yarn install` command
+2. Run `yarn dev` command
 
 ### Tests
 
