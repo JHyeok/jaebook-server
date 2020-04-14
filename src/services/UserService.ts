@@ -2,11 +2,17 @@ import { Service } from "typedi";
 import { InjectRepository } from "typeorm-typedi-extensions";
 import { User } from "../entities/User";
 import { UserRepository } from "../repositories/UserRepository";
+import { PostRepository } from "../repositories/PostRepository";
+import { PostCommentRepository } from "../repositories/PostCommentRepository";
 import { CreateUserDto } from "../dtos/UserDto";
 
 @Service()
 export class UserService {
-  constructor(@InjectRepository() private userRepository: UserRepository) {}
+  constructor(
+    @InjectRepository() private userRepository: UserRepository,
+    @InjectRepository() private postRepository: PostRepository,
+    @InjectRepository() private postCommentRepository: PostCommentRepository,
+  ) {}
 
   public async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = createUserDto.toEntity();
@@ -15,11 +21,19 @@ export class UserService {
     return newUser;
   }
 
-  public getUsersById(id: string): Promise<User> {
+  public getUserById(id: string): Promise<User> {
     return this.userRepository.findOne({
       select: ["id", "email", "realName", "createdAt"],
       where: { id: id },
     });
+  }
+
+  public getPostsByUserId(userId: string) {
+    return this.postRepository.getPostsByUserId(userId);
+  }
+
+  public getCommentsByUserId(userId: string) {
+    return this.postCommentRepository.getCommentsByUserId(userId);
   }
 
   /**

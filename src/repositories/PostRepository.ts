@@ -51,4 +51,20 @@ export class PostRepository extends Repository<Post> {
       .where("post.id = :postId", { postId })
       .getOne();
   }
+
+  public async getPostsByUserId(userId: string) {
+    return this.createQueryBuilder("post")
+      .select([
+        "post.id",
+        "post.title",
+        "post.previewContent",
+        "post.createdAt",
+        "post.view",
+        "post.like",
+      ])
+      .leftJoinAndSelect("post.user", "user")
+      .where("post.userId = :userId", { userId })
+      .orderBy("post.createdAt", "DESC")
+      .getMany();
+  }
 }
