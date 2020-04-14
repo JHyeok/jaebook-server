@@ -70,10 +70,10 @@ describe("GET /api/posts", () => {
 
     const { body } = response;
     expect(body.length).toBe(2);
-    expect(body[0].title).toBe(PostSeed[1].title);
-    expect(body[0].previewContent).toBe(PostSeed[1].previewContent);
-    expect(body[1].title).toBe(PostSeed[0].title);
-    expect(body[1].previewContent).toBe(PostSeed[0].previewContent);
+    expect(body[0].title).toBe(PostSeed[0].title);
+    expect(body[0].previewContent).toBe(PostSeed[0].previewContent);
+    expect(body[1].title).toBe(PostSeed[1].title);
+    expect(body[1].previewContent).toBe(PostSeed[1].previewContent);
   });
 
   // PostSeed[0]의 점수가 1이기 때문에(조회로 인한 증가) 더 인기글이다.
