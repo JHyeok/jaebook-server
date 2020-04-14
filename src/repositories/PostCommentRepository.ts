@@ -21,8 +21,22 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.postId",
       ])
       .leftJoinAndSelect("comment.user", "user")
-      .orderBy("comment.createdAt", "ASC")
       .where("comment.postId = :postId", { postId })
+      .orderBy("comment.createdAt", "ASC")
+      .getMany();
+  }
+
+  public async getCommentsByUserId(userId: string) {
+    return this.createQueryBuilder("comment")
+      .select([
+        "comment.id",
+        "comment.text",
+        "comment.createdAt",
+        "comment.postId",
+      ])
+      .leftJoinAndSelect("comment.user", "user")
+      .where("comment.userId = :userId", { userId })
+      .orderBy("comment.createdAt", "DESC")
       .getMany();
   }
 }
