@@ -32,14 +32,14 @@ const consoleOutputFormat = combine(
   colorize(),
   prettyPrint(),
   json(),
-  printf(info => {
+  printf((info) => {
     return `${info.timestamp} ${info.level}: ${info.message}`;
   }),
 );
 
 // 파일 로그 출력 포맷 설정
 const fileOutputFormat = combine(
-  printf(info => {
+  printf((info) => {
     if (info.stack) {
       return `${info.timestamp} ${info.level} ${info.message} : ${info.stack}`;
     }

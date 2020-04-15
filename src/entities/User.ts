@@ -37,10 +37,7 @@ export class User {
   @UpdateDateColumn({ name: "updated_at" })
   public updatedAt: Date;
 
-  @OneToMany(
-    type => Post,
-    post => post.user,
-  )
+  @OneToMany((type) => Post, (post) => post.user)
   public posts: Post[];
 
   @BeforeInsert()

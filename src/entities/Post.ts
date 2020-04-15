@@ -21,11 +21,10 @@ export class Post {
   @Column({ name: "user_id", length: 36 })
   public userId: string;
 
-  @ManyToOne(
-    type => User,
-    user => user.id,
-    { cascade: true, onDelete: "CASCADE" },
-  )
+  @ManyToOne((type) => User, (user) => user.id, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "user_id" })
   public user: User;
 
@@ -49,10 +48,7 @@ export class Post {
   @Column({ default: 0, comment: "Best Post에 기준이 되는 점수" })
   public score: number;
 
-  @OneToMany(
-    type => PostComment,
-    postComment => postComment.post,
-  )
+  @OneToMany((type) => PostComment, (postComment) => postComment.post)
   public comments: PostComment[];
 
   @CreateDateColumn({ name: "created_at" })

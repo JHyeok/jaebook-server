@@ -40,9 +40,7 @@ describe("GET /api/users/:id", () => {
   });
 
   it("400: 잘못된 유저ID 파라미터로 반환에 실패한다", async () => {
-    await request(app)
-      .get("/api/users/not-user")
-      .expect(400);
+    await request(app).get("/api/users/not-user").expect(400);
   });
 });
 
@@ -58,9 +56,7 @@ describe("GET /api/users/:id/posts", () => {
   });
 
   it("204: 잘못된 유저ID로 빈 배열을 반환한다", async () => {
-    await request(app)
-      .get("/api/users/not-user/posts")
-      .expect(204);
+    await request(app).get("/api/users/not-user/posts").expect(204);
   });
 });
 
@@ -76,8 +72,6 @@ describe("GET /api/users/:id/comments", () => {
   });
 
   it("204: 잘못된 유저ID로 빈 배열을 반환한다", async () => {
-    await request(app)
-      .get("/api/users/not-user/comments")
-      .expect(204);
+    await request(app).get("/api/users/not-user/comments").expect(204);
   });
 });

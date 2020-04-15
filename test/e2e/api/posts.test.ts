@@ -54,10 +54,7 @@ describe("GET /api/posts/:id", () => {
   });
 
   it("400: 해당하는 Post가 없어서 조회에 실패한다", async () => {
-    await request(app)
-      .get("/api/posts/notId")
-      .set(setHeader(""))
-      .expect(400);
+    await request(app).get("/api/posts/notId").set(setHeader("")).expect(400);
   });
 });
 

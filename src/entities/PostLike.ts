@@ -23,19 +23,17 @@ export class PostLike {
   @Column({ name: "user_id", length: 36 })
   public userId: string;
 
-  @ManyToOne(
-    type => Post,
-    post => post.id,
-    { cascade: true, onDelete: "CASCADE" },
-  )
+  @ManyToOne((type) => Post, (post) => post.id, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "post_id" })
   public post: Post;
 
-  @ManyToOne(
-    type => User,
-    user => user.id,
-    { cascade: true, onDelete: "CASCADE" },
-  )
+  @ManyToOne((type) => User, (user) => user.id, {
+    cascade: true,
+    onDelete: "CASCADE",
+  })
   @JoinColumn({ name: "user_id" })
   public user: User;
 
