@@ -18,6 +18,7 @@ import { OpenAPI } from "routing-controllers-openapi";
 import {
   CreatePostCommentDto,
   UpdatePostCommentDto,
+  CreateCommentReplyDto,
 } from "../dtos/PostCommentDto";
 
 @JsonController("/posts")
@@ -111,7 +112,7 @@ export class PostCommentController {
     if (!updatedPostComment) {
       return res
         .status(403)
-        .send({ message: "Post 댓글을 수정할 권한이 없습니다." });
+        .send({ message: "댓글을 수정할 권한이 없습니다." });
     }
 
     return updatedPostComment;
@@ -146,7 +147,7 @@ export class PostCommentController {
     if (!result) {
       return res
         .status(403)
-        .send({ message: "Post 댓글을 삭제할 권한이 없습니다." });
+        .send({ message: "댓글을 삭제할 권한이 없습니다." });
     }
 
     return {
@@ -154,5 +155,68 @@ export class PostCommentController {
       postCommentId: commentId,
       isDelete: result,
     };
+  }
+
+  @HttpCode(201)
+  @Post("/:postId/comments/:id/replies")
+  @OpenAPI({
+    summary: "Post 댓글 답글 생성",
+    statusCode: "201",
+    responses: {
+      "400": {
+        description: "Bad request",
+      },
+    },
+    security: [{ bearerAuth: [] }],
+  })
+  @UseBefore(checkAccessToken)
+  public async createReply(
+    @Param("postId") postId: string,
+    @Param("id") commentId: string,
+    @Body() createCommentReplyDto: CreateCommentReplyDto,
+    @Res() res: Response,
+  ) {
+    const { userId } = res.locals.jwtPayload;
+
+    const commentReply = await this.postCommentService.createCommentReply(
+      postId,
+      createCommentReplyDto,
+      userId,
+      commentId,
+    );
+
+    if (commentReply) {
+      return commentReply;
+    } else {
+      return res.status(400).send({ message: "잘못된 요청입니다." });
+    }
+  }
+
+  @HttpCode(200)
+  @Get("/:postId/comments/:id/replies")
+  @OpenAPI({
+    summary: "Post 댓글 답글 조회",
+    responses: {
+      "400": {
+        description: "Bad request",
+      },
+    },
+    statusCode: "200",
+  })
+  public async getReply(
+    @Param("postId") postId: string,
+    @Param("id") commentId: string,
+    @Res() res: Response,
+  ) {
+    const comments = await this.postCommentService.getCommentReplies(
+      postId,
+      commentId,
+    );
+
+    if (comments) {
+      return comments;
+    } else {
+      return res.status(400).send({ message: "잘못된 요청입니다." });
+    }
   }
 }
