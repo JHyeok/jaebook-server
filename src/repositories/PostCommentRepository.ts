@@ -19,9 +19,11 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.text",
         "comment.createdAt",
         "comment.postId",
+        "comment.isReplies",
       ])
       .leftJoinAndSelect("comment.user", "user")
       .where("comment.postId = :postId", { postId })
+      .andWhere("comment.depth = 0")
       .orderBy("comment.createdAt", "ASC")
       .getMany();
   }
@@ -37,6 +39,23 @@ export class PostCommentRepository extends Repository<PostComment> {
       .leftJoinAndSelect("comment.user", "user")
       .where("comment.userId = :userId", { userId })
       .orderBy("comment.createdAt", "DESC")
+      .getMany();
+  }
+
+  public async getCommentReplies(postId: string, commentId: string) {
+    return this.createQueryBuilder("comment")
+      .select([
+        "comment.id",
+        "comment.parent",
+        "comment.depth",
+        "comment.text",
+        "comment.createdAt",
+        "comment.postId",
+      ])
+      .leftJoinAndSelect("comment.user", "user")
+      .where("comment.postId = :postId", { postId })
+      .andWhere("comment.parent = :commentId", { commentId })
+      .orderBy("comment.createdAt", "ASC")
       .getMany();
   }
 }

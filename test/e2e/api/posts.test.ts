@@ -285,6 +285,61 @@ describe("GET /api/posts/:postId/comments", () => {
   });
 });
 
+describe("POST /api/posts/:postId/comments/:id/replies", () => {
+  it("201: Post 댓글 답글 작성에 성공한다", async () => {
+    const token = generateAccessToken(user as any);
+    const response = await request(app)
+      .post(
+        `/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}/replies`,
+      )
+      .set(setHeader(token))
+      .send({
+        text: "댓글 내용입니다.",
+      })
+      .expect(201);
+
+    const { body } = response;
+    expect(body.parent).toBe(testPostCommentId);
+    expect(body.depth).toBe(1);
+    expect(body.text).toBe("댓글 내용입니다.");
+  });
+
+  it("400: 해당하는 댓글이 없어서 답글 작성에 실패한다", async () => {
+    const token = generateAccessToken(user as any);
+    await request(app)
+      .post(`/api/posts/${PostSeed[0].id}/comments/notCommentId/replies`)
+      .set(setHeader(token))
+      .send({
+        text: "댓글 내용입니다.",
+      })
+      .expect(400);
+  });
+});
+
+describe("GET /api/posts/:postId/comments/:id/replies", () => {
+  it("200: Post 댓글 답글 조회에 성공한다", async () => {
+    const token = generateAccessToken(user as any);
+    const response = await request(app)
+      .get(`/api/posts/${PostSeed[0].id}/comments/${testPostCommentId}/replies`)
+      .set(setHeader(token))
+      .expect(200);
+
+    const { body } = response;
+    expect(body[0].text).toBe("댓글 내용입니다.");
+    expect(body[0].parent).toBe(testPostCommentId);
+    expect(body[0].depth).toBe(1);
+    expect(body[0].postId).toBe(PostSeed[0].id);
+  });
+
+  it("400: 해당하는 Post가 없어서 댓글 조회에 실패한다", async () => {
+    const token = generateAccessToken(user as any);
+    await request(app)
+      .get("/api/posts/notPostId/comments/notCommentId/replies")
+      .set(setHeader(token))
+      .expect(400);
+  });
+});
+
 describe("PUT /api/posts/:postId/comments/:id", () => {
   it("403: 권한이 없어서 Post 댓글 수정에 실패한다", async () => {
     const token = generateAccessToken({

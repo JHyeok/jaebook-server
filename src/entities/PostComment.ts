@@ -36,9 +36,25 @@ export class PostComment {
   @JoinColumn({ name: "user_id" })
   public user: User;
 
+  @Column({ nullable: true, comment: "부모 댓글 uuid" })
+  public parent: string;
+
+  @Column({ default: 0, comment: "0: 댓글, 1: 대댓글" })
+  public depth: number;
+
   @IsNotEmpty()
   @Column({ type: "text" })
   public text: string;
+
+  @Column({
+    name: "is_replies",
+    default: false,
+    comment: "true: 자식 댓글이 있다, false: 자식 댓글이 없다",
+  })
+  public isReplies: boolean;
+
+  @Column({ name: "is_deleted", default: false })
+  public isDeleted: boolean;
 
   @CreateDateColumn({ name: "created_at" })
   public createdAt: Date;
