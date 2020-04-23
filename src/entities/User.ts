@@ -14,38 +14,38 @@ import { Post } from "./Post";
 @Entity({ name: "user" })
 export class User {
   @PrimaryGeneratedColumn("uuid")
-  public id: string;
+  id: string;
 
   @IsNotEmpty()
   @Column({ name: "real_name", length: 50 })
-  public realName: string;
+  realName: string;
 
   @IsNotEmpty()
   @Column({ length: 100 })
-  public email: string;
+  email: string;
 
   @IsNotEmpty()
   @Column({ select: false })
-  public password: string;
+  password: string;
 
   @Column({ name: "refresh_token", nullable: true, select: false })
-  public refreshToekn: string;
+  refreshToekn: string;
 
   @CreateDateColumn({ name: "created_at" })
-  public createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
-  public updatedAt: Date;
+  updatedAt: Date;
 
   @OneToMany((type) => Post, (post) => post.user)
-  public posts: Post[];
+  posts: Post[];
 
   @BeforeInsert()
-  public async hashPassword() {
+  async hashPassword() {
     this.password = await bcrypt.hash(this.password, 10);
   }
 
-  public async comparePassword(unencryptedPassword: string): Promise<boolean> {
+  async comparePassword(unencryptedPassword: string): Promise<boolean> {
     return await bcrypt.compare(unencryptedPassword, this.password);
   }
 }

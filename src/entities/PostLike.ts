@@ -15,31 +15,31 @@ import { Post } from "./Post";
 @Index(["postId", "userId"], { unique: true })
 export class PostLike {
   @PrimaryGeneratedColumn("uuid")
-  public id: string;
+  id: string;
 
   @Column({ name: "post_id", length: 36 })
-  public postId: string;
+  postId: string;
 
   @Column({ name: "user_id", length: 36 })
-  public userId: string;
+  userId: string;
 
   @ManyToOne((type) => Post, (post) => post.id, {
     cascade: true,
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "post_id" })
-  public post: Post;
+  post: Post;
 
   @ManyToOne((type) => User, (user) => user.id, {
     cascade: true,
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "user_id" })
-  public user: User;
+  user: User;
 
   @CreateDateColumn({ name: "created_at" })
-  public createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
-  public updatedAt: Date;
+  updatedAt: Date;
 }

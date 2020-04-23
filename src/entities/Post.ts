@@ -16,49 +16,49 @@ import { PostComment } from "./PostComment";
 @Entity({ name: "post" })
 export class Post {
   @PrimaryGeneratedColumn("uuid")
-  public id: string;
+  id: string;
 
   @Column({ name: "user_id", length: 36 })
-  public userId: string;
+  userId: string;
 
   @ManyToOne((type) => User, (user) => user.id, {
     cascade: true,
     onDelete: "CASCADE",
   })
   @JoinColumn({ name: "user_id" })
-  public user: User;
+  user: User;
 
   @IsNotEmpty()
   @Column()
-  public title: string;
+  title: string;
 
   @IsNotEmpty()
   @Column({ type: "text" })
-  public content: string;
+  content: string;
 
   @Column({ name: "preview_content", length: 100 })
-  public previewContent: string;
+  previewContent: string;
 
   @Column({ default: 0 })
-  public view: number;
+  view: number;
 
   @Column({ default: 0 })
-  public like: number;
+  like: number;
 
   @Column({ default: 0, comment: "Best Post에 기준이 되는 점수" })
-  public score: number;
+  score: number;
 
   @OneToMany((type) => PostComment, (postComment) => postComment.post)
-  public comments: PostComment[];
+  comments: PostComment[];
 
   @CreateDateColumn({ name: "created_at" })
-  public createdAt: Date;
+  createdAt: Date;
 
   @UpdateDateColumn({ name: "updated_at" })
-  public updatedAt: Date;
+  updatedAt: Date;
 
   @BeforeUpdate()
-  public async calculateScoreUsingViewAndLike() {
+  async calculateScoreUsingViewAndLike() {
     this.score = Number(this.view) + Number(this.like) * 500;
   }
 }
