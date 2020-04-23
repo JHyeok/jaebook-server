@@ -36,8 +36,8 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.createdAt",
         "comment.postId",
       ])
-      .leftJoinAndSelect("comment.user", "user")
       .where("comment.userId = :userId", { userId })
+      .andWhere("comment.isDeleted = :value", { value: false })
       .orderBy("comment.createdAt", "DESC")
       .getMany();
   }
