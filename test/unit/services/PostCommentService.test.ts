@@ -78,16 +78,16 @@ describe("PostCommentService", () => {
     const postComments = await postCommentService.getCommentByPostId(
       request.postId,
     );
-    expect(postComments[0].isReplies).toBeTruthy();
+    expect(postComments.comments[0].isReplies).toBeTruthy();
   });
 
   it("포스트Id가 일치하는 포스트 댓글 목록을 반환한다", async () => {
     const postComments = await postCommentService.getCommentByPostId(
       request.postId,
     );
-    expect(postComments.length).toBe(1);
-    expect(postComments[0].text).toBe(request.text);
-    expect(postComments[0].user.id).toBe(request.userId);
+    expect(postComments.count).toBe(2);
+    expect(postComments.comments[0].text).toBe(request.text);
+    expect(postComments.comments[0].user.id).toBe(request.userId);
   });
 
   it("포스트 댓글 답글 목록을 반환한다", async () => {

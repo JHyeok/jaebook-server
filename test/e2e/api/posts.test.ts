@@ -271,9 +271,10 @@ describe("GET /api/posts/:postId/comments", () => {
       .expect(200);
 
     const { body } = response;
-    expect(body[0].text).toBe("댓글 내용입니다.");
-    expect(body[0].postId).toBe(PostSeed[0].id);
-    testPostCommentId = body[0].id;
+    expect(body.count).toBe(1);
+    expect(body.comments[0].text).toBe("댓글 내용입니다.");
+    expect(body.comments[0].postId).toBe(PostSeed[0].id);
+    testPostCommentId = body.comments[0].id;
   });
 
   it("400: 해당하는 Post가 없어서 댓글 조회에 실패한다", async () => {

@@ -62,7 +62,6 @@ export class PostRepository extends Repository<Post> {
         "post.view",
         "post.like",
       ])
-      .leftJoinAndSelect("post.user", "user")
       .where("post.userId = :userId", { userId })
       .orderBy("post.createdAt", "DESC")
       .getMany();

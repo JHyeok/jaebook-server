@@ -5,10 +5,8 @@ import { PostComment } from "../entities/PostComment";
 export class PostCommentRepository extends Repository<PostComment> {
   public async getCommentById(postId: string, commentId: string) {
     return this.createQueryBuilder("comment")
-      .where("comment.postId = :postId AND comment.id = :commentId", {
-        postId,
-        commentId,
-      })
+      .where("comment.id = :commentId", { commentId })
+      .andWhere("comment.postId = :postId", { postId })
       .getOne();
   }
 
@@ -20,10 +18,11 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.createdAt",
         "comment.postId",
         "comment.isReplies",
+        "comment.isDeleted",
       ])
       .leftJoinAndSelect("comment.user", "user")
       .where("comment.postId = :postId", { postId })
-      .andWhere("comment.depth = 0")
+      .andWhere("comment.depth = :value", { value: 0 })
       .orderBy("comment.createdAt", "ASC")
       .getMany();
   }
@@ -36,8 +35,8 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.createdAt",
         "comment.postId",
       ])
-      .leftJoinAndSelect("comment.user", "user")
       .where("comment.userId = :userId", { userId })
+      .andWhere("comment.isDeleted = :value", { value: false })
       .orderBy("comment.createdAt", "DESC")
       .getMany();
   }
@@ -51,6 +50,7 @@ export class PostCommentRepository extends Repository<PostComment> {
         "comment.text",
         "comment.createdAt",
         "comment.postId",
+        "comment.isDeleted",
       ])
       .leftJoinAndSelect("comment.user", "user")
       .where("comment.postId = :postId", { postId })
