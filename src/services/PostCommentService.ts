@@ -52,8 +52,22 @@ export class PostCommentService {
     return await this.postCommentRepository.save(commentReply);
   }
 
-  public async getCommentByPostId(postId: string): Promise<PostComment[]> {
-    return await this.postCommentRepository.getCommentsByPostId(postId);
+  public async getCommentByPostId(postId: string) {
+    const count = await this.postCommentRepository.count({
+      where: {
+        postId: postId,
+        isDeleted: false,
+      },
+    });
+
+    const comments = await this.postCommentRepository.getCommentsByPostId(
+      postId,
+    );
+
+    return {
+      count,
+      comments,
+    };
   }
 
   public async getCommentReplies(
@@ -105,7 +119,9 @@ export class PostCommentService {
     );
 
     if (postCommentToDelete?.userId === userId) {
-      await this.postCommentRepository.delete({ id: commentId });
+      postCommentToDelete.text = "작성자에 의해 삭제된 댓글입니다.";
+      postCommentToDelete.isDeleted = true;
+      await this.postCommentRepository.save(postCommentToDelete);
       return true;
     }
 
