@@ -63,12 +63,12 @@ describe("UserService", () => {
     expect(user.email).toBe(request.email);
   });
 
-  it("Id가 일치하는 게시글이 없어서 빈 배열을 반환한다", async () => {
+  it("Id가 일치하는 Post가 없어서 빈 배열을 반환한다", async () => {
     const posts = await userService.getPostsByUserId(newUserId);
     expect(posts).toStrictEqual([]);
   });
 
-  it("Id가 일치하는 게시글을 찾아서 게시글 배열을 반환한다", async () => {
+  it("Id가 일치하는 Post를 찾아서 Post 배열을 반환한다", async () => {
     const posts = await userService.getPostsByUserId(activeUserId);
     expect(posts.length).toBe(2);
     expect(posts[0].title).toBe("테스트 제목입니다.");

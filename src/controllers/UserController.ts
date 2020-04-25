@@ -32,8 +32,8 @@ export class UserController {
   @HttpCode(200)
   @Get("/:id/posts")
   @OpenAPI({
-    summary: "사용자 게시글 정보",
-    description: "UserId로 사용자가 작성한 게시글을 반환한다",
+    summary: "사용자 작성한 Post 목록",
+    description: "UserId로 사용자가 작성한 Post들을 반환한다",
     statusCode: "200",
     responses: {
       "204": {
@@ -54,8 +54,8 @@ export class UserController {
   @HttpCode(200)
   @Get("/:id/comments")
   @OpenAPI({
-    summary: "사용자 댓글 정보",
-    description: "UserId로 사용자가 작성한 댓글을 반환한다",
+    summary: "사용자가 작성한 댓글 목록",
+    description: "UserId로 사용자가 작성한 댓글들을 반환한다",
     statusCode: "200",
     responses: {
       "204": {
