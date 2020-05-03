@@ -4,7 +4,7 @@ import { User } from "../entities/User";
 import { UserRepository } from "../repositories/UserRepository";
 import { PostRepository } from "../repositories/PostRepository";
 import { PostCommentRepository } from "../repositories/PostCommentRepository";
-import { CreateUserDto } from "../dtos/UserDto";
+import { CreateUserDto, UpdateUserDto } from "../dtos/UserDto";
 
 @Service()
 export class UserService {
@@ -34,6 +34,27 @@ export class UserService {
 
   public getCommentsByUserId(userId: string) {
     return this.postCommentRepository.getCommentsByUserId(userId);
+  }
+
+  public async updateUser(
+    userId: string,
+    targetUserId: string,
+    updateUserDto: UpdateUserDto,
+  ): Promise<User> {
+    if (userId !== targetUserId) {
+      return null;
+    }
+
+    const userToUpdate = await this.userRepository.findOne({
+      where: { id: userId },
+    });
+
+    if (userToUpdate?.id === userId) {
+      userToUpdate.realName = updateUserDto.realName;
+      return await this.userRepository.save(userToUpdate);
+    }
+
+    return null;
   }
 
   /**

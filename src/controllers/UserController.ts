@@ -1,7 +1,18 @@
-import { JsonController, Get, Res, HttpCode, Param } from "routing-controllers";
+import {
+  JsonController,
+  Get,
+  Res,
+  HttpCode,
+  Param,
+  Put,
+  Body,
+  UseBefore,
+} from "routing-controllers";
 import { Response } from "express";
 import { UserService } from "../services/UserService";
 import { OpenAPI } from "routing-controllers-openapi";
+import { UpdateUserDto } from "../dtos/UserDto";
+import { checkAccessToken } from "../middlewares/AuthMiddleware";
 
 @JsonController("/users")
 export class UserController {
@@ -71,5 +82,37 @@ export class UserController {
     }
 
     return comments;
+  }
+
+  @HttpCode(200)
+  @Put("/:id")
+  @OpenAPI({
+    summary: "사용자 정보 수정",
+    statusCode: "200",
+    responses: {
+      "403": {
+        description: "Forbidden",
+      },
+    },
+    security: [{ bearerAuth: [] }],
+  })
+  @UseBefore(checkAccessToken)
+  public async update(
+    @Param("id") id: string,
+    @Body() updateUserDto: UpdateUserDto,
+    @Res() res: Response,
+  ) {
+    const { userId } = res.locals.jwtPayload;
+    const updatedUser = await this.userService.updateUser(
+      userId,
+      id,
+      updateUserDto,
+    );
+
+    if (!updatedUser) {
+      return res.status(403).send({ message: "수정할 권한이 없습니다." });
+    }
+
+    return updatedUser;
   }
 }
