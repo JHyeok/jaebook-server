@@ -47,6 +47,7 @@ describe("UserService", () => {
 
   const activeUserId: string = "6d2deecf-a0f7-470f-b31f-ede0024efece";
   const wrongUserEmail: string = "null@gmail.com";
+  const wrongUserId: string = "notUserId";
   let newUserId: string;
 
   const updateUserDto = new UpdateUserDto();
@@ -108,6 +109,15 @@ describe("UserService", () => {
     );
     expect(user.id).toBe(newUserId);
     expect(user.realName).toBe(updateUserDto.realName);
+  });
+
+  it("잘못된 유저 정보를 수정하면 실패한다", async () => {
+    const result = await userService.updateUser(
+      wrongUserId,
+      wrongUserId,
+      updateUserDto,
+    );
+    expect(result).toBeNull();
   });
 
   it("권한이 없는 사람이 유저 정보를 수정하면 실패한다", async () => {
