@@ -43,3 +43,8 @@ export class ResponseUserDto {
 
   public email: string;
 }
+
+export class UpdateUserDto {
+  @IsNotEmpty()
+  public realName: string;
+}

@@ -5,7 +5,7 @@ import { UserRepository } from "../../../src/repositories/UserRepository";
 import { PostRepository } from "../../../src/repositories/PostRepository";
 import { PostCommentRepository } from "../../../src/repositories/PostCommentRepository";
 import { User } from "../../../src/entities/User";
-import { CreateUserDto } from "../../../src/dtos/UserDto";
+import { CreateUserDto, UpdateUserDto } from "../../../src/dtos/UserDto";
 import { UserSeed } from "../../utils/seeds/UserTestSeed";
 import { PostSeed } from "../../utils/seeds/PostTestSeed";
 import { PostCommentSeed } from "../../utils/seeds/PostCommentTestSeed";
@@ -47,7 +47,11 @@ describe("UserService", () => {
 
   const activeUserId: string = "6d2deecf-a0f7-470f-b31f-ede0024efece";
   const wrongUserEmail: string = "null@gmail.com";
+  const wrongUserId: string = "notUserId";
   let newUserId: string;
+
+  const updateUserDto = new UpdateUserDto();
+  updateUserDto.realName = "김길동";
 
   it("유저를 생성하고 생성된 정보를 반환한다", async () => {
     const newUser = await userService.createUser(createUserDto);
@@ -95,5 +99,33 @@ describe("UserService", () => {
   it("등록되지 않은 이메일의 중복 여부를 검사하면 false를 반환한다", async () => {
     const isUnDuplicateUser = await userService.isDuplicateUser(wrongUserEmail);
     expect(isUnDuplicateUser).toBeFalsy();
+  });
+
+  it("유저 정보를 수정하고 수정된 정보를 반환한다", async () => {
+    const user = await userService.updateUser(
+      newUserId,
+      newUserId,
+      updateUserDto,
+    );
+    expect(user.id).toBe(newUserId);
+    expect(user.realName).toBe(updateUserDto.realName);
+  });
+
+  it("잘못된 유저 정보를 수정하면 실패한다", async () => {
+    const result = await userService.updateUser(
+      wrongUserId,
+      wrongUserId,
+      updateUserDto,
+    );
+    expect(result).toBeNull();
+  });
+
+  it("권한이 없는 사람이 유저 정보를 수정하면 실패한다", async () => {
+    const result = await userService.updateUser(
+      activeUserId,
+      newUserId,
+      updateUserDto,
+    );
+    expect(result).toBeNull();
   });
 });
