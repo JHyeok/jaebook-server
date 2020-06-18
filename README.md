@@ -40,6 +40,12 @@ By setting options for your team, you can keep your team's coding style consiste
 
 ![eslint-prettier](./readme/eslint-prettier.gif)
 
+### GitHub Action and Codecov
+
+![github-action](./readme/github-action.png)
+
+![codecov](./readme/codecov.png)
+
 ### Environment Variable Management
 
 #### APP
