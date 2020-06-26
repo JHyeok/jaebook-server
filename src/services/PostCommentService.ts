@@ -15,6 +15,12 @@ export class PostCommentService {
     private postCommentRepository: PostCommentRepository,
   ) {}
 
+  /**
+   * 포스트의 댓글을 생성한다.
+   * @param postId 포스트 Id
+   * @param createPostCommentDto 포스트 댓글 생성 DTO
+   * @param userId 사용자 Id
+   */
   public async createPostComment(
     postId: string,
     createPostCommentDto: CreatePostCommentDto,
@@ -25,6 +31,13 @@ export class PostCommentService {
     return await this.postCommentRepository.save(postComment);
   }
 
+  /**
+   * 댓글의 답글을 생성한다.
+   * @param postId 포스트 Id
+   * @param createCommentReplyDto 포스트 댓글의 답글 생성 DTO
+   * @param userId 사용자 Id
+   * @param commentId 댓글 Id
+   */
   public async createCommentReply(
     postId: string,
     createCommentReplyDto: CreateCommentReplyDto,
@@ -52,6 +65,10 @@ export class PostCommentService {
     return await this.postCommentRepository.save(commentReply);
   }
 
+  /**
+   * 포스트의 댓글의 총 개수와 댓글(답글을 제외한)들을 조회한다.
+   * @param postId 포스트 Id
+   */
   public async getCommentByPostId(postId: string) {
     const count = await this.postCommentRepository.count({
       where: {
@@ -70,6 +87,11 @@ export class PostCommentService {
     };
   }
 
+  /**
+   * 댓글의 답글을 조회한다.
+   * @param postId 포스트 Id
+   * @param commentId 댓글 Id
+   */
   public async getCommentReplies(
     postId: string,
     commentId: string,
@@ -89,6 +111,13 @@ export class PostCommentService {
     );
   }
 
+  /**
+   * 댓글을 수정한다.
+   * @param postId 포스트 Id
+   * @param commentId 댓글 Id
+   * @param updatePostCommentDto 포스트 댓글 수정 DTO
+   * @param userId 사용자 Id
+   */
   public async updatePostComment(
     postId: string,
     commentId: string,
@@ -108,6 +137,12 @@ export class PostCommentService {
     return null;
   }
 
+  /**
+   * 댓글을 삭제한다.
+   * @param postId 포스트 Id
+   * @param commentId 댓글 Id
+   * @param userId 사용자 Id
+   */
   public async deletePostComment(
     postId: string,
     commentId: string,

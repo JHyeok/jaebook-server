@@ -7,6 +7,10 @@ import { validationMetadatasToSchemas } from "class-validator-jsonschema";
 import { routingControllerOptions } from "./RoutingConfig";
 import { env } from "../env";
 
+/**
+ * Swagger를 사용하도록 한다.
+ * @param app Express Application
+ */
 export function useSwagger(app: express.Application) {
   // Parse class-validator classes into JSON Schema:
   const metadatas = (getFromContainer(MetadataStorage) as any)

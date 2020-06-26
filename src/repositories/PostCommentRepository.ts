@@ -3,6 +3,11 @@ import { PostComment } from "../entities/PostComment";
 
 @EntityRepository(PostComment)
 export class PostCommentRepository extends Repository<PostComment> {
+  /**
+   * 포스트 Id와 댓글 Id가 일치하는 댓글 정보를 조회한다.
+   * @param postId 포스트 Id
+   * @param commentId 댓글 Id
+   */
   public async getCommentById(postId: string, commentId: string) {
     return this.createQueryBuilder("comment")
       .where("comment.id = :commentId", { commentId })
@@ -10,6 +15,10 @@ export class PostCommentRepository extends Repository<PostComment> {
       .getOne();
   }
 
+  /**
+   * 포스트 Id가 일치하며 답글을 제외한 댓글들을 조회한다.
+   * @param postId 포스트 Id
+   */
   public async getCommentsByPostId(postId: string) {
     return this.createQueryBuilder("comment")
       .select([
@@ -27,6 +36,10 @@ export class PostCommentRepository extends Repository<PostComment> {
       .getMany();
   }
 
+  /**
+   * 사용자가 작성한 삭제되지 않은 댓글과 답글들을 조회한다.
+   * @param userId 사용자 Id
+   */
   public async getCommentsByUserId(userId: string) {
     return this.createQueryBuilder("comment")
       .select([
@@ -41,6 +54,11 @@ export class PostCommentRepository extends Repository<PostComment> {
       .getMany();
   }
 
+  /**
+   * 포스트 Id와 댓글 Id가 일치하는 댓글의 답글들을 조회한다.
+   * @param postId 포스트 Id
+   * @param commentId 댓글 Id
+   */
   public async getCommentReplies(postId: string, commentId: string) {
     return this.createQueryBuilder("comment")
       .select([

@@ -14,6 +14,10 @@ export class UserService {
     @InjectRepository() private postCommentRepository: PostCommentRepository,
   ) {}
 
+  /**
+   * 사용자를 생성한다.
+   * @param createUserDto 사용자 생성 DTO
+   */
   public async createUser(createUserDto: CreateUserDto): Promise<User> {
     const user = createUserDto.toEntity();
     const newUser = await this.userRepository.save(user);
@@ -21,6 +25,10 @@ export class UserService {
     return newUser;
   }
 
+  /**
+   * 사용자 정보를 조회한다.
+   * @param id 사용자 Id
+   */
   public getUserById(id: string): Promise<User> {
     return this.userRepository.findOne({
       select: ["id", "email", "realName", "createdAt"],
@@ -28,19 +36,35 @@ export class UserService {
     });
   }
 
+  /**
+   * 사용자가 작성한 포스트 목록을 조회한다.
+   * @param userId 사용자 Id
+   */
   public getPostsByUserId(userId: string) {
     return this.postRepository.getPostsByUserId(userId);
   }
 
+  /**
+   * 사용자가 작성한 삭제되지 않은 댓글과 답글들을 조회한다.
+   * @param userId 사용자 Id
+   */
   public getCommentsByUserId(userId: string) {
     return this.postCommentRepository.getCommentsByUserId(userId);
   }
 
+  /**
+   * 사용자 정보를 수정한다.
+   * @param userId 요청한 사용자 Id
+   * @param targetUserId 사용자 정보가 수정되는 사용자 Id
+   * @param updateUserDto 사용자 정보 수정 DTO
+   */
   public async updateUser(
     userId: string,
     targetUserId: string,
     updateUserDto: UpdateUserDto,
   ): Promise<User> {
+    // 변경을 요청한 사용자 Id와 변경이 되는 사용자의 Id를 검사한다.
+    // 다른 사용자가 Front를 우회해서 악의적으로 변경을 요청하는 부분에 대한 방어.
     if (userId !== targetUserId) {
       return null;
     }
@@ -58,7 +82,7 @@ export class UserService {
   }
 
   /**
-   * 동일한 이메일의 사용자가 있는지 검사
+   * 동일한 이메일의 사용자가 있는지 검사한다.
    * @param email 이메일
    */
   public async isDuplicateUser(email: string): Promise<boolean> {
