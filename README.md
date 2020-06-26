@@ -2,6 +2,8 @@
 
 Using TypeScript and Express.
 
+Frontend : [JaeBook Client](https://github.com/JHyeok/jaebook-client)
+
 ### Project Features
 
 - **Express with TypeScript**
