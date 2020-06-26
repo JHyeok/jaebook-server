@@ -8,6 +8,11 @@ import { CreatePostDto, UpdatePostDto } from "../dtos/PostDto";
 export class PostService {
   constructor(@InjectRepository() private postRepository: PostRepository) {}
 
+  /**
+   * 포스트를 생성한다.
+   * @param createPostDto 포스트 생성 DTO
+   * @param userId 사용자 Id
+   */
   public async createPost(
     createPostDto: CreatePostDto,
     userId: string,
@@ -20,6 +25,12 @@ export class PostService {
     return newPost;
   }
 
+  /**
+   * 포스트 목록을 조회한다.
+   * @param offset offset
+   * @param limit limit
+   * @param sort best는 주간 인기글을 조회하고 best가 아니면 일반 최신글을 조회한다.
+   */
   public getPosts(
     offset: number,
     limit: number,
@@ -34,12 +45,16 @@ export class PostService {
     }
   }
 
+  /**
+   * 포스트 정보를 조회한다.
+   * @param postId 포스트 Id
+   */
   public getPostById(postId: string): Promise<Post> {
     return this.postRepository.getPostById(postId);
   }
 
   /**
-   * 포스트의 조회수를 증가한다
+   * 포스트의 조회수를 증가한다.
    * @param post 포스트
    */
   public async incrementPostView(post: Post): Promise<void> {
@@ -47,6 +62,12 @@ export class PostService {
     await this.postRepository.save(post);
   }
 
+  /**
+   * 포스트를 수정한다.
+   * @param postId 포스트 Id
+   * @param updatePostDto 포스트 수정 DTO
+   * @param userId 사용자 Id
+   */
   public async updatePost(
     postId: string,
     updatePostDto: UpdatePostDto,
@@ -64,6 +85,11 @@ export class PostService {
     }
   }
 
+  /**
+   * 포스트를 삭제한다.
+   * @param postId 포스트 Id
+   * @param userId 사용자 Id
+   */
   public async deletePost(postId: string, userId: string): Promise<boolean> {
     const postToDelete = await this.postRepository.getPostById(postId);
 
@@ -94,6 +120,9 @@ export class PostService {
     return false;
   }
 
+  /**
+   * 7일 전의 날짜와 시간을 구한다.
+   */
   private getDateBeforeWeek(): Date {
     const date = new Date();
     date.setDate(date.getDate() - 7);

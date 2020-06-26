@@ -13,9 +13,9 @@ export class PostLikeService {
   ) {}
 
   /**
-   * 포스트에 좋아요를 눌렀었는지 확인한다
-   * @param postId 포스트Id
-   * @param userId 유저Id
+   * 포스트에 좋아요를 눌렀었는지 확인한다.
+   * @param postId 포스트 Id
+   * @param userId 사용자 Id
    * @returns true는 좋아요를 한 상태, false는 좋아요를 하지 않은 상태
    */
   public async isPostLike(postId: string, userId: string): Promise<boolean> {
@@ -34,9 +34,9 @@ export class PostLikeService {
   }
 
   /**
-   * 포스트에 좋아요를 한다
-   * @param postId 포스트Id
-   * @param userId 유저Id
+   * 포스트에 좋아요를 한다.
+   * @param postId 포스트 Id
+   * @param userId 사용자 Id
    */
   public async likePost(postId: string, userId: string): Promise<Post> {
     const post = await this.postRepository.findOne(postId);
@@ -70,9 +70,9 @@ export class PostLikeService {
   }
 
   /**
-   * 포스트에 좋아요를 취소한다
-   * @param postId 포스트Id
-   * @param userId 유저Id
+   * 포스트에 좋아요를 취소한다.
+   * @param postId 포스트 Id
+   * @param userId 사용자 Id
    */
   public async unlikePost(postId: string, userId: string): Promise<Post> {
     const post = await this.postRepository.findOne(postId);

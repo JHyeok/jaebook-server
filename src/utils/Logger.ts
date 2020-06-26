@@ -27,7 +27,9 @@ if (!existsSync(logDirectory)) {
   mkdirSync(logDirectory);
 }
 
-// 콘솔 로그 출력 포맷 설정
+/**
+ * 콘솔 로그 출력 포맷 설정
+ */
 const consoleOutputFormat = combine(
   colorize(),
   prettyPrint(),
@@ -37,7 +39,9 @@ const consoleOutputFormat = combine(
   }),
 );
 
-// 파일 로그 출력 포맷 설정
+/**
+ * 파일 로그 출력 포맷 설정
+ */
 const fileOutputFormat = combine(
   printf((info) => {
     if (info.stack) {

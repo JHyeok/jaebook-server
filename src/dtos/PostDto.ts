@@ -8,6 +8,9 @@ import {
 } from "class-validator";
 import { Post } from "../entities/Post";
 
+/**
+ * 포스트 생성 DTO
+ */
 export class CreatePostDto {
   @IsNotEmpty()
   public title: string;
@@ -26,6 +29,9 @@ export class CreatePostDto {
   }
 }
 
+/**
+ * 포스트 수정 DTO
+ */
 export class UpdatePostDto {
   @IsNotEmpty()
   public title: string;
@@ -34,6 +40,9 @@ export class UpdatePostDto {
   public content: string;
 }
 
+/**
+ * 포스트 목록 페이징 DTO
+ */
 export class PageablePostDto {
   @IsNumber()
   public offset: number;

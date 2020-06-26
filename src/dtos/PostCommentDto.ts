@@ -1,6 +1,9 @@
 import { IsNotEmpty } from "class-validator";
 import { PostComment } from "../entities/PostComment";
 
+/**
+ * 포스트 댓글 생성 DTO
+ */
 export class CreatePostCommentDto {
   @IsNotEmpty()
   public text: string;
@@ -17,11 +20,17 @@ export class CreatePostCommentDto {
   }
 }
 
+/**
+ * 포스트 댓글 수정 DTO
+ */
 export class UpdatePostCommentDto {
   @IsNotEmpty()
   public text: string;
 }
 
+/**
+ * 포스트 댓글의 답글 생성 DTO
+ */
 export class CreateCommentReplyDto {
   @IsNotEmpty()
   public text: string;

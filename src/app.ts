@@ -22,7 +22,10 @@ export class App {
     this.setMiddlewares();
   }
 
-  private async setDatabase() {
+  /**
+   * 데이터베이스를 세팅한다.
+   */
+  private async setDatabase(): Promise<void> {
     try {
       await createDatabaseConnection();
     } catch (error) {
@@ -30,13 +33,20 @@ export class App {
     }
   }
 
+  /**
+   * 미들웨어를 세팅한다.
+   */
   private setMiddlewares(): void {
     this.app.use(bodyParser.json());
     this.app.use(bodyParser.urlencoded({ extended: false }));
     this.app.use(morgan("combined", { stream }));
   }
 
-  public async createExpressServer(port: number) {
+  /**
+   * Express를 시작한다.
+   * @param port 포트
+   */
+  public async createExpressServer(port: number): Promise<void> {
     try {
       routingUseContainer(Container);
       useExpressServer(this.app, routingControllerOptions);
