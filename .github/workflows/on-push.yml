@@ -54,13 +54,13 @@ jobs:
         port: ${{ secrets.PORT }}
         script: |
           cd ${{ secrets.SERVER_FILE_DIRECTORY }}
-          git stash
-          git pull origin master
+          git reset --hard origin/master
           docker login -u ${{ secrets.DOCKER_USER }} -p ${{ secrets.DOCKER_PASSWORD }}
           docker build -t ${{ secrets.SERVER_IMAGE_NAME }} .
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker tag ${{ secrets.SERVER_IMAGE_NAME }} ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:${{ github.sha }}
           docker push ${{ secrets.DOCKER_USER }}/${{ secrets.SERVER_IMAGE_NAME }}:latest
+          docker-compose up -d
           docker image prune -f -a
           
