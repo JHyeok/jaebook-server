@@ -31,7 +31,7 @@ export class PostService {
    * @param limit limit
    * @param sort best는 주간 인기글을 조회하고 best가 아니면 일반 최신글을 조회한다.
    */
-  public getPosts(
+  public async getPosts(
     offset: number,
     limit: number,
     sort?: string,
@@ -39,9 +39,14 @@ export class PostService {
     switch (sort) {
       case "best":
         const dateBeforeWeek = this.getDateBeforeWeek();
-        return this.postRepository.getBestPosts(offset, limit, dateBeforeWeek);
+
+        return await this.postRepository.getBestPosts(
+          offset,
+          limit,
+          dateBeforeWeek,
+        );
       default:
-        return this.postRepository.getPosts(offset, limit);
+        return await this.postRepository.getPosts(offset, limit);
     }
   }
 
@@ -49,8 +54,8 @@ export class PostService {
    * 포스트 정보를 조회한다.
    * @param postId 포스트 Id
    */
-  public getPostById(postId: string): Promise<Post> {
-    return this.postRepository.getPostById(postId);
+  public async getPostById(postId: string): Promise<Post> {
+    return await this.postRepository.getPostById(postId);
   }
 
   /**

@@ -29,8 +29,8 @@ export class UserService {
    * 사용자 정보를 조회한다.
    * @param id 사용자 Id
    */
-  public getUserById(id: string): Promise<User> {
-    return this.userRepository.findOne({
+  public async getUserById(id: string): Promise<User> {
+    return await this.userRepository.findOne({
       select: ["id", "email", "realName", "createdAt"],
       where: { id: id },
     });
@@ -40,16 +40,16 @@ export class UserService {
    * 사용자가 작성한 포스트 목록을 조회한다.
    * @param userId 사용자 Id
    */
-  public getPostsByUserId(userId: string) {
-    return this.postRepository.getPostsByUserId(userId);
+  public async getPostsByUserId(userId: string) {
+    return await this.postRepository.getPostsByUserId(userId);
   }
 
   /**
    * 사용자가 작성한 삭제되지 않은 댓글과 답글들을 조회한다.
    * @param userId 사용자 Id
    */
-  public getCommentsByUserId(userId: string) {
-    return this.postCommentRepository.getCommentsByUserId(userId);
+  public async getCommentsByUserId(userId: string) {
+    return await this.postCommentRepository.getCommentsByUserId(userId);
   }
 
   /**
