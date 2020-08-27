@@ -34,7 +34,9 @@ Test using In-memory Database.
 
 ### Swagger
 
-![swagger](./readme/swagger.gif)
+![jaebook-swagger-first](./readme/jaebook-swagger-first.png)
+
+![jaebook-swagger-second](./readme/jaebook-swagger-second.png)
 
 ### Coding style automation with ESLint, Prettier and VSCode
 
