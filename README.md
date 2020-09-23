@@ -4,6 +4,10 @@ Using TypeScript and Express.
 
 Frontend : [JaeBook Client](https://github.com/JHyeok/jaebook-client)
 
+### Article
+
+- [Node.js 계층 구조 설계 및 환경 변수 관리](https://jhyeok.com/node-backend-structure/)
+
 ### Project Features
 
 - **Express with TypeScript**
